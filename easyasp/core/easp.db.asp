@@ -1222,6 +1222,24 @@ Class EasyASP_Db
     OpenConn()
     Ins = InsertRecord(o_conn, table, fieldValues, False)
     CheckError "insert", Err, o_conn, "Ins", Array(table, fieldValues)
+    If Ins = 1 Then '根据数据库类型获取新增记录的ID
+       Dim r_co, s_identityQuery
+       Select Case Type()
+           Case "MSSQL"
+               s_identityQuery = "SELECT SCOPE_IDENTITY() AS newID"
+           Case "MYSQL"
+               s_identityQuery = "SELECT LAST_INSERT_ID() AS newID"
+           Case Else
+               s_identityQuery = "SELECT @@IDENTITY AS newID"
+       End Select
+       Set r_co = o_conn.Execute(s_identityQuery)
+       If Not r_co.EOF Then
+           Ins = r_co("newID")
+       Else
+           Ins = -1 ' 表示获取ID失败
+       End If
+       r_co.Close
+    End If
   End Function
 
   '批量插入记录
