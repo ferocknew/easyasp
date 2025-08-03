@@ -24,7 +24,7 @@ Class EasyASP
   Public Mo, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, X, Y, Z
   '定义私有变量
   Private o_rwt, o_ext
-  Private s_basePath, s_pluginPath, s_cores, s_defaultPageName, s_charset
+  Private version, s_basePath, s_pluginPath, s_cores, s_defaultPageName, s_charset
   Private b_debug
   Private i_timer, i_newId
   '构造函数
