@@ -29,7 +29,7 @@ Class EasyASP
   Private i_timer, i_newId
   '构造函数
   Private Sub Class_Initialize()
-    version = 3.1
+    version = 3.1.1
     s_basePath       = "/easyasp/"
     s_pluginPath     = s_basePath & "plugin/"
     b_debug          = False

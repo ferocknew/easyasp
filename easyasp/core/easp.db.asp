@@ -1497,12 +1497,17 @@ Class EasyASP_Db
     ReplaceStasicParameter = sql
   End Function
 
-  '转换sql参数类型为数值
+    '转换sql参数类型为数值
   Private Function GetParameterType(ByVal paramType)
     Dim n
-    If IsNumeric(paramType) Then
+    ' 添加输入验证
+    If IsEmpty(paramType) Or IsNull(paramType) Then
+      n = 200  ' 默认返回 adVarChar
+    ElseIf IsNumeric(paramType) Then
       n = paramType
     Else
+      ' 去除首尾空格
+      paramType = Trim(paramType)
       Select Case LCase(paramType)
         'from the ASP book
         Case "empty"              n = 0
@@ -1524,13 +1529,12 @@ Class EasyASP_Db
         Case "unsignedsmallint"   n = 18
         Case "unsignedint"        n = 19
         Case "bigint"             n = 20
-        Case "ebigint"            n = 20
         Case "unsignedbigint"     n = 21
         Case "guid"               n = 72
         Case "binary"             n = 128
         Case "char"               n = 129
         Case "wchar"              n = 130
-        Case "numeric"            n = 5
+        Case "numeric"            n = 131  ' 修正为 adNumeric
         Case "userdefined"        n = 132
         Case "dbdate"             n = 133
         Case "dbtime"             n = 134
@@ -1545,6 +1549,7 @@ Class EasyASP_Db
         Case "varbinary"          n = 204
         Case "longvarbinary"      n = 204
         Case "longbinary"         n = 205
+
         'SQL Server
         Case "bit"                n = 11
         Case "money"              n = 6
@@ -1552,7 +1557,7 @@ Class EasyASP_Db
         Case "smallmoney"         n = 6
         Case "float"              n = 5
         Case "nchar"              n = 200
-        Case "real"               n = 131
+        Case "real"               n = 4   ' 修正为 adSingle
         Case "text"               n = 200
         Case "time"               n = 134
         Case "timestamp"          n = 135
@@ -1560,14 +1565,15 @@ Class EasyASP_Db
         Case "smalldatetime"      n = 135
         Case "datetime2"          n = 135
         Case "sysname"            n = 129
-        Case "uniqueidentifier"   n = 131
+        Case "uniqueidentifier"   n = 72  ' 修正为 adGUID
         Case "ntext"              n = 200
         Case "nvarchar"           n = 200
         Case "nvarchar2"          n = 200
         Case "image"              n = 204
         Case "sql_variant"        n = 12
+
         'MySQL
-        Case "year"               n = 133
+        Case "year"               n = 3   ' 修正为 adInteger
         Case "tinytext"           n = 200
         Case "mediumtext"         n = 200
         Case "longtext"           n = 201
