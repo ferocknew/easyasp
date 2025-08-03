@@ -163,7 +163,15 @@ Class EasyASP_Db
         ConnStr = "Provider=sqloledb;Data Source=" & s & Easp.IfThen(Easp.Has(port), "," & port) & ";Initial Catalog="&strDB&";User Id="&u&";Password="&p&";"
       Case "ACCESS"
         Dim tDb : If Instr(strDB,":")>0 Then : tDb = strDB : Else : tDb = Server.MapPath(strDB) : End If
-        ConnStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
+        ' 根据文件扩展名选择提供程序
+        Dim fileExt : fileExt = LCase(Right(tDb, 4))
+        If fileExt = ".accdb" Then
+          ' 对于 .accdb 文件使用 ACE 提供程序
+          ConnStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
+        Else
+          ' 对于 .mdb 文件使用 JET 提供程序
+          ConnStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
+        End If
       Case "MYSQL"
         '服务器需要安装MySQL ODBC驱动，下载地址 http://dev.mysql.com/downloads/connector/odbc/5.1.html
         If port = "" Then port = "3306"
