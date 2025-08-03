@@ -1,3 +1,4 @@
+<!--#include file="../../easyasp/easp.asp" -->
 <%
 ' ========================================
 ' ACCDB 连接修复测试页面
@@ -8,8 +9,7 @@
 Response.CharSet = "utf-8"
 Response.ContentType = "text/html"
 
-' 引入 EasyASP
-%><!--#include file="../../easyasp/easp.asp" --><%
+
 
 ' 测试连接
 On Error Resume Next
