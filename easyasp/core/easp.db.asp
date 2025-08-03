@@ -167,7 +167,7 @@ Class EasyASP_Db
         Dim fileExt : fileExt = LCase(Right(tDb, 4))
         If fileExt = ".accdb" Then
           ' 对于 .accdb 文件使用 ACE 提供程序
-          ConnStr = "Provider=Microsoft.ACE.OLEDB.14.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
+          ConnStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
         Else
           ' 对于 .mdb 文件使用 JET 提供程序
           ConnStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source="&tDb&";Jet OLEDB:Database Password="&p&";"
