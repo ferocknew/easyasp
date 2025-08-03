@@ -1222,7 +1222,7 @@ Class EasyASP_Db
     CheckError "insert", Err, o_conn, "Ins", Array(table, fieldValues)
     If Ins = 1 Then '根据数据库类型获取新增记录的ID
        Dim r_co, s_identityQuery
-       Select Case Type()
+       Select Case [Type]()
            Case "MSSQL"
                s_identityQuery = "SELECT SCOPE_IDENTITY() AS newID"
            Case "MYSQL"
