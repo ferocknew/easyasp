@@ -3,10 +3,8 @@
 '## easp.tar.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP File Archiver Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-06-01 1:24:16
-'## Description :   Pack multiple folders and files into one file or 
+'## Description :   Pack multiple folders and files into one file or
 '##                 unpack a zipped file to the server.
 '######################################################################
 
@@ -29,7 +27,7 @@ Class EasyASP_Tar
     Easp.Error("error-tar-packfaild") = Easp.Lang("error-tar-packfaild")
     Easp.Error("error-tar-unpackfaild") = Easp.Lang("error-tar-unpackfaild")
   End Sub
-  
+
   Private Sub Class_Terminate()
     Set o_fso = Nothing
     Set dic_files = Nothing
@@ -388,7 +386,7 @@ Class EasyASP_Tar
     o_strm.Position = 0
     o_strm.Type = 1
     Response.AddHeader "content-type", "application/octec-stream"
-    Response.AddHeader "Content-Disposition","attachment;filename=" & s_fileName 
+    Response.AddHeader "Content-Disposition","attachment;filename=" & s_fileName
     Response.AddHeader "content-length", o_strm.Size
     Do While Not o_strm.EOS
       char = o_strm.Read(1)

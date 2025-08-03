@@ -3,9 +3,7 @@
 '## easp.var.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Variables Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-07-09
 '## Description :   Get and set EasyASP super variables.
 '##
 '######################################################################
@@ -25,9 +23,9 @@ Class EasyASP_Var
     Next
     Set o_var = Nothing
   End Sub
-  
+
   '读取和设置EasyASP超级变量集
-  '优先级依次为: 
+  '优先级依次为:
   '  1.自定义变量
   '  2.Request.QueryString
   '  3.Request.Form
@@ -108,7 +106,7 @@ Class EasyASP_Var
     If Not b_loaded Then Call getVars()
     Has = (o_var.Exists(key) Or o_var.Exists("get." & key) Or o_var.Exists("post." & key) Or Easp.Str.IsInList("easp.newid,easp.datetime,easp.date,easp.time", key) Or o_var.Exists("easp." & key))
   End Function
-  
+
   '将页面参数获取值写入到Var集合
   Private Sub getVars()
     ''取表单值

@@ -3,9 +3,7 @@
 '## easp.fso.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP FileSystemObject Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-06-23 16:19:07
 '## Description :   EasyASP Files System Operator
 '##
 '######################################################################

@@ -4,7 +4,6 @@
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP StringBuilder Class
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-05-12 0:38:21
 '## Description :   Create a string in a high-performance way
 '##
 '######################################################################
@@ -37,7 +36,7 @@ Class EasyASP_Str_StringBuilder
   Public Property Get Capacity
     Capacity = i_length + 1
   End Property
-  
+
   '附加字符串
   Public Sub Append(ByVal string)
     AppendString string, False, ""

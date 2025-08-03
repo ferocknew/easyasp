@@ -3,9 +3,7 @@
 '## Easp.Console.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Console Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-04-04
 '## Description :   Input and output messages with a console page(window).
 '##
 '######################################################################
@@ -15,7 +13,7 @@ Class EasyASP_Console
   Public Enable, ShowSql, ShowSqlTime
   Public Name, MaxCacheSize, MaxLogSize
   Private s_token
-  
+
   Private Sub Class_Initialize()
     '是否开启控制台
     Enable       = False
@@ -37,7 +35,7 @@ Class EasyASP_Console
   Public Property Let Token(ByVal string)
     s_token = string
   End Property
-  
+
   '写入控制台日志信息
   Public Default Sub Log(ByVal message)
     Dim s_tmp, string

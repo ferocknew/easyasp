@@ -3,17 +3,15 @@
 '## easp.http.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP XMLHTTP Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-07-14 7:07:07
 '## Description :   Request XMLHttp Data in EasyASP
-'## 
+'##
 '######################################################################
 Class EasyASP_Http
   Public Method, CharSet, Async, User, Password, Html, Headers, Body, Text, SaveRandom
   Public ResolveTimeout, ConnectTimeout, SendTimeout, ReceiveTimeout
   Private s_data, s_url, s_ohtml, o_rh
-  
+
   Private Sub Class_Initialize
     Easp.Error("error-http-object") = Easp.Lang("error-http-object")
     Easp.Error("error-http-serverdown") = Easp.Lang("error-http-serverdown")
@@ -46,7 +44,7 @@ Class EasyASP_Http
     Set o_rh = Easp.Json.NewObject
 '    ReDim a_rh(-1)
   End Sub
-  
+
   Private Sub Class_Terminate
     Set o_rh = Nothing
   End Sub
@@ -55,12 +53,12 @@ Class EasyASP_Http
   Public Function [New]()
     Set [New] = New EasyASP_Http
   End Function
-  
+
   '设置要提交的数据
   Public Property Let Data(ByVal s)
     s_data = s
   End Property
-  
+
   '设置请求头信息
   Public Sub SetHeader(ByVal a)
     Dim i,n,v
@@ -98,7 +96,7 @@ Class EasyASP_Http
   Public Property Let Url(ByVal string)
     s_url = string
   End Property
-  
+
 '  '设置http的RequestHeader
   Private Sub SetHeaderTo(ByRef ht)
     Dim dic, key
@@ -110,22 +108,22 @@ Class EasyASP_Http
     Next
     Set dic = Nothing
   End Sub
-  
+
   '属性配置模式下打开连接远程
   Public Function [Open]
     [Open] = GetData(s_url, Method, Async, s_data, User, Password)
   End Function
-  
+
   'Get模式取远程页
   Public Function [Get](ByVal uri)
     [Get] = GetData(uri, "GET", Async, s_data, User, Password)
   End Function
-  
+
   'Post模式取远程页
   Public Function Post(ByVal uri)
     Post = GetData(uri, "POST", Async, s_data, User, Password)
   End Function
-  
+
   '获取远程页完整参数模式
   Public Function GetData(ByVal uri, ByVal m, ByVal async, ByVal data, ByVal u, ByVal p)
     Dim a_http, i, ht, chru, s_serData, isWinhttp
@@ -181,7 +179,7 @@ Class EasyASP_Http
         End If
       End If
     Next
-    
+
     If ht.Status = 200 Then
       Headers = ht.getAllResponseHeaders()
       Body = ht.ResponseBody
@@ -234,7 +232,7 @@ Class EasyASP_Http
   Public Function FindString(ByVal s, ByVal rule)
     If Easp.Str.Test(s,rule) Then FindString = Easp.Str.Replace(s,"([\s\S]*)("&rule&")([\s\S]*)","$2")
   End Function
-  
+
   '按正则查找返回HTML中符合的第一个字符串并选择编组
   '可按正则编组选择其中的一部分
   Public Function [Select](ByVal rule, ByVal part)
@@ -249,7 +247,7 @@ Class EasyASP_Http
       SelectString = Easp.Str.Replace(s,"(?:[\s\S]*)(?:"&rule&")(?:[\s\S]*)",part)
     End If
   End Function
-  
+
   '按正则查找返回HTML中符合的字符串组，返回数组
   Public Function Search(ByVal rule)
     Search = SearchString(s_ohtml, rule)
@@ -266,7 +264,7 @@ Class EasyASP_Http
     Set matches = Nothing
     SearchString = arr
   End Function
-  
+
   '在返回HTML中按标签查找字符串
   Public Function Cut(ByVal tagStart, ByVal tagEnd, ByVal tagSelf)
   'tagStart - 要截取的部分的开头
@@ -288,7 +286,7 @@ Class EasyASP_Http
       End If
       Exit Function
     End If
-    posB = instr(PosA+Len(tagStart),s,tagEnd,1) 
+    posB = instr(PosA+Len(tagStart),s,tagEnd,1)
     If posB=0 Then
       CutString = ""
       If Easp.Debug Then
@@ -314,7 +312,7 @@ Class EasyASP_Http
     End Select
     CutString = Mid(s,first,between)
   End Function
-  
+
   '保存返回HTML中的远程图片到本地
   '返回替换图片地址为本地路径后的html代码
   Public Function SaveImgTo(ByVal p)
@@ -425,7 +423,7 @@ Class EasyASP_Http
       Easp.PrintEnd [Get](u)
     End If
   End Sub
-  
+
   '将目录路径转换为目标页面的绝对路径
   '参数：  url - 目标页面，path将以此url为基准
   '       path - 要转换的目录
@@ -449,7 +447,7 @@ Class EasyASP_Http
     fol = Mid(tmp,1,InstrRev(tmp,"/"))
     TransPath = Easp.IIF(Left(path,1) = "/", ser, fol) & path
   End Function
-  
+
   'url参数化
   Private Function Serialize__(ByVal a)
     Dim tmp, i, n, v : tmp = ""
@@ -466,9 +464,9 @@ Class EasyASP_Http
       Serialize__ = a
     End If
   End Function
-  
+
   '编码转换
-  Private Function Bytes2Bstr__(ByVal s, ByVal char) 
+  Private Function Bytes2Bstr__(ByVal s, ByVal char)
     dim oStrm
     set oStrm = Server.CreateObject("Adodb.Stream")
     With oStrm

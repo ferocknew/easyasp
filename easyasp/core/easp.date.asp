@@ -3,9 +3,7 @@
 '## Easp.Date.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Date & Time Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-01-30
 '## Description :   Format and processing the date and time object
 '##
 '######################################################################
@@ -13,23 +11,23 @@
 Class EasyASP_Date
 
   Public WeekStarting
-  
+
   Private Sub Class_Initialize()
     '规定周的第一天，可采用下面的值：
     WeekStarting = 2
-    '0 = vbUseSystemDayOfWeek - 使用区域语言支持 (NLS) API 设置。 
+    '0 = vbUseSystemDayOfWeek - 使用区域语言支持 (NLS) API 设置。
     '1 = vbSunday - 星期日
     '2 = vbMonday - 星期一
-    '3 = vbTuesday - 星期二 
-    '4 = vbWednesday - 星期三 
-    '5 = vbThursday - 星期四 
-    '6 = vbFriday - 星期五 
+    '3 = vbTuesday - 星期二
+    '4 = vbWednesday - 星期三
+    '5 = vbThursday - 星期四
+    '6 = vbFriday - 星期五
     '7 = vbSaturday - 星期六
   End Sub
   Private Sub Class_Terminate()
-    
+
   End Sub
-  
+
   '格式化日期时间
   Public Function Format(ByVal iTime, ByVal iFormat)
     If Easp.IsN(iTime) Or Not IsDate(iTime) Then Format = "" : Exit Function
@@ -117,7 +115,7 @@ Class EasyASP_Date
   Public Function FirstDayOfMonth(ByVal d)
     FirstDayOfMonth = CDate(Year(d)&"-"&Month(d)&"-1" & Format(d, " hh:ii:ss"))
   End Function
-  
+
   '取所在月份的最后一天
   Public Function LastDayOfMonth(ByVal d)
     LastDayOfMonth = CDate(DateAdd("d",-1,DateAdd("m",1,Year(d)&"-"&Month(d)&"-1")) & Format(d, " hh:ii:ss"))
@@ -127,12 +125,12 @@ Class EasyASP_Date
   Public Function DayOfWeek(ByVal d, ByVal n)
     DayOfWeek = DateAdd("d",n-Weekday(d,WeekStarting),d)
   End Function
-  
+
   '取所在周的第一天
   Public Function FirstDayOfWeek(ByVal d)
     FirstDayOfWeek = DayOfWeek(d,1)
   End Function
-  
+
   '取所在周的最后一天
   Public Function LastDayOfWeek(ByVal d)
     LastDayOfWeek = DayOfWeek(d,7)

@@ -3,10 +3,8 @@
 '## easp.validation.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP String Validation Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-06-22 0:48:20
-'## Description :   With defined rules or custom rules to verify the 
+'## Description :   With defined rules or custom rules to verify the
 '##                 legitimacy of a string.
 '##
 '######################################################################
@@ -15,7 +13,7 @@ Class EasyASP_Validation
 
   Private b_validate, b_return, s_source, s_split, a_return, b_array
   Private s_value, s_field, s_msg, s_msgDefault, s_default, s_name
-  
+
   Private Sub Class_Initialize()
     b_validate   = True
     b_return     = True
@@ -556,7 +554,7 @@ Class EasyASP_Validation
       CreateMsgDefault SameSession, "samesession", Null
     End If
   End Function
-  
+
 End Class
 Class EasyASP_ValidationTool
   Public Function Join_(ByRef arr, ByVal separator)

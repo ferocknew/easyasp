@@ -3,16 +3,14 @@
 '## easp.xml.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP XML Document Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-04-27 16:58:41
 '## Description :   Read and write the XML documents
 '##
 '######################################################################
 Class EasyASP_Xml
   Public Dom, Doc, IsOpen
   Private s_filePath, s_xsltPath
-  
+
   '构造函数
   Private Sub Class_Initialize()
     s_filePath = ""
@@ -29,7 +27,7 @@ Class EasyASP_Xml
     Easp.Error("error-xml-nextel") = Easp.Lang("error-xml-nextel")
     Easp.Error("error-xml-findel") = Easp.Lang("error-xml-findel")
   End Sub
-  
+
   '析构函数
   Private Sub Class_Terminate()
     '释放Document
@@ -61,7 +59,7 @@ Class EasyASP_Xml
     Set NewDom = o
     Set o = Nothing
   End Function
-  
+
   '开打一个已经存在的XML文件,返回打开状态
   Public Function Open(byVal f)
     On Error Resume Next
@@ -96,7 +94,7 @@ Class EasyASP_Xml
     If Mid(p,2,1)<>":" Then p = Server.MapPath(p)
     absPath = p
   End Function
-  
+
   '从文本或者URL载入XML结构数据
   Public Sub Load(ByVal s)
     On Error Resume Next
@@ -145,7 +143,7 @@ Class EasyASP_Xml
 '  Public Property Get XSLT
 '    XSLT = s_xsltPath
 '  End Property
-  
+
   '关闭文件
   Public Sub Close()
     Set Doc = Nothing
@@ -153,7 +151,7 @@ Class EasyASP_Xml
     s_filePath = ""
     IsOpen = False
   End Sub
-  
+
   '保存文件
   Public Sub [Save]()
     If IsOpen Then
@@ -198,23 +196,23 @@ Class EasyASP_Xml
     Easp.Fso.CreateFile p, f
     Set x = Nothing
   End Sub
-  
+
   '建立新的Easp Node对象
   Public Function NewNode(ByVal o)
     Set NewNode = New EasyASP_Xml_Node
     NewNode.Dom = o
   End Function
-  
+
   '根对象
   Public Function Root
     Set Root = NewNode(Dom)
   End Function
-  
+
   '建立新的Easp Xml对象
   Public Function [New]()
     Set [New] = New EasyASP_Xml
   End Function
-    
+
   'TagName取对象
   Public Default Function Find(ByVal t)
     Dim o,s
@@ -259,7 +257,7 @@ Class EasyASP_Xml
   Public Function Sel(ByVal p)
     Set Sel = NewNode(Dom.selectSingleNode(p))
   End Function
-  
+
   '新建一个节点
   Public Function Create(ByVal n, ByVal v)
     Dim o,p,cd
@@ -302,7 +300,7 @@ Class EasyASP_Xml_Node
     Set [New] = New EasyASP_Xml_Node
     [New].Dom = o
   End Function
-  
+
   '源对象
   Public Property Let Dom(ByVal o)
     If Not o Is Nothing Then
@@ -318,7 +316,7 @@ Class EasyASP_Xml_Node
   Public Property Get Dom
     Set Dom = o_node
   End Property
-  
+
   '取集合中的某一项
   Public Default Function Item(ByVal n)
     '如果是集合就取其中下标对应子项
@@ -336,7 +334,7 @@ Class EasyASP_Xml_Node
       Set Item = Nothing
     End If
   End Function
-  
+
   '=======Xml元素属性（自身属性）======
 
   '是否是元素节点
@@ -366,7 +364,7 @@ Class EasyASP_Xml_Node
     If Not IsNode Then Exit Property
     Attr = o_node.getAttribute(s)
   End Property
-  
+
   '文本设置
   Public Property Let Text(ByVal v)
     If IsNode Then
@@ -389,7 +387,7 @@ Class EasyASP_Xml_Node
       Next
     End If
   End Property
-  
+
   '文本设置
   Public Property Let Value(ByVal v)
     If IsNode Then
@@ -405,7 +403,7 @@ Class EasyASP_Xml_Node
     If Not IsNode Then Exit Property
     Value = o_node.ChildNodes(0).NodeValue
   End Property
-  
+
   '获取XML(只读)
   Public Property Get Xml
     If IsNode Then
@@ -441,15 +439,15 @@ Class EasyASP_Xml_Node
   End Property
   '取元素长度
   Public Property Get Length
-    If IsNode Then 
+    If IsNode Then
       Length = o_node.ChildNodes.Length
     Else
       Length = o_node.Length
     End If
   End Property
-  
+
   '=======Xml元素属性（返回新节点元素）======
-  
+
   '获取根元素
   Public Function Root
     If IsNode Then
@@ -520,7 +518,7 @@ Class EasyASP_Xml_Node
     If Not IsNode Then Exit Function
     Set Last = [New](o_node.LastChild)
   End Function
-  
+
   '=======Xml元素方法======
 
   '查找是否有某属性

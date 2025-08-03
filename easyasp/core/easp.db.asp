@@ -3,9 +3,7 @@
 '## easp.db.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Database Control Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-06-26 09:48:38
 '## Description :   Database controler
 '##
 '######################################################################
@@ -94,7 +92,7 @@ Class EasyASP_Db
   Public Property Let LimitParam(ByVal string)
     s_limitParam = string
   End Property
-  
+
   '设置和读取分页每页数量
   Public Property Let PageSize(ByVal sizeNumber)
     i_pageSize = CInt(sizeNumber)
@@ -204,7 +202,7 @@ Class EasyASP_Db
     If IsNumeric(dbType) Then dbType = Array("MSSQL","ACCESS","MYSQL")(dbType)
     o_connections(connectionName) = Array(dbType, strDB, strServer)
   End Sub
-  
+
   '设置默认Connection对象
   '参数：  @dbType    - 数据库类型
   '       @strDB     - 数据库名称
@@ -212,7 +210,7 @@ Class EasyASP_Db
   Public Sub SetConn(ByVal dbType, ByVal strDB, ByVal strServer)
     Call SetConnection("default", dbType, strDB, strServer)
   End Sub
-  
+
   '取得Connection对象
   '参数：  @connectionName - 连接名称
   Public Function GetConnection(ByVal connectionName)
@@ -247,7 +245,7 @@ Class EasyASP_Db
       End If
     End If
   End Property
-  
+
   '打开默认Connection连接
   Private Sub OpenConn()
     Dim b_opened
@@ -258,7 +256,7 @@ Class EasyASP_Db
       Set o_conn = GetConnection("default")
     End If
   End Sub
-  
+
   '取得数据库类型
   Public Function GetType(ByRef conn)
     Dim dbms, s_type
@@ -279,7 +277,7 @@ Class EasyASP_Db
     OpenConn()
     [Type] = GetType(o_conn)
   End Function
-  
+
   '取得数据库的版本号
   Public Function GetVersion(ByRef conn)
     GetVersion = conn.Properties("DBMS Version")
@@ -597,7 +595,7 @@ Class EasyASP_Db
       End If
     End If
   End Sub
-  
+
   '执行SQL语句,返回记录集(R)或受影响的行数(CUD)
   Public Function Execute(ByRef conn, ByVal sql)
     On Error Resume Next
@@ -609,7 +607,7 @@ Class EasyASP_Db
     End If
     CheckError "execute", Err, conn, "Execute", sql
   End Function
-  
+
   '用默认Connection执行SQL语句,返回记录集(R)或受影响的行数(CUD)
   Public Function Exec(ByVal sql)
     On Error Resume Next
@@ -754,7 +752,7 @@ Class EasyASP_Db
         If NextRS.State = 1 Then Exit Do
       End If
     Loop
-  End Function  
+  End Function
 
   '取得分页后记录集
   '说明：可以是单表、多表连接或者包含子查询的复杂SQL查询语句，但如果是Access数据
@@ -909,7 +907,7 @@ Class EasyASP_Db
     Next
     ReverseOrderBy = "ORDER BY " & Join(a_fields, ", ")
   End Function
-  
+
   '取得当前页码
   '返回：  Int
   Private Function GetPageIndex()
@@ -1165,7 +1163,7 @@ Class EasyASP_Db
     If hasClass = 0 And Easp.Has(s_tmp) Then s_tmp = " class=""" & s_tmp & """"
     AddHtmlClass = s_tmp
   End Function
-    
+
   '替换Url参数
   Private Function ReplaceUrl(ByVal param, ByVal value)
     Dim a_rwt, o_matches
@@ -1622,7 +1620,7 @@ Class EasyASP_Db
     End Select
     FormatValue = s_tmp
   End Function
-  
+
   '关闭并释放对象
   '参数：  @obj  - ASP对象
   '返回：  无
@@ -1632,7 +1630,7 @@ Class EasyASP_Db
     End If
     Set obj = Nothing
   End Sub
-  
+
   '开始一个事务
   Public Function BeginTrans(ByRef conn)
     BeginTrans = conn.BeginTrans

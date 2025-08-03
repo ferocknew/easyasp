@@ -3,9 +3,7 @@
 '## easp.error.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Exception Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-04-19 02:14:28
 '## Description :   Deal with the EasyASP Exception
 '##
 '######################################################################
@@ -137,7 +135,7 @@ Class EasyASP_Error
     If IsObject(ec) Then Set e_conn = ec
     If isObject(ed) Then Set e_dom = ed
   End Sub
-  
+
   '生成一个错误(常用于开发者错误模式)
   Public Sub Raise(ByVal n)
     If Easp.isN(n) Then Exit Sub
@@ -159,7 +157,7 @@ Class EasyASP_Error
     i_errNum = n
     s_msg = ""
   End Sub
-  
+
   '立即抛出一个错误信息(常用于用户错误模式)
   Public Sub Throw(ByVal msg)
     Dim a_info, i_tmp
@@ -187,7 +185,7 @@ Class EasyASP_Error
       End If
     End If
   End Sub
-  
+
   '在控制台中抛出错误信息
   Public Sub Console(ByVal n)
     If Easp.isN(n) Then Exit Sub
@@ -196,7 +194,7 @@ Class EasyASP_Error
     msg = o_err(n)
     InConsole msg, Easp.Debug
   End Sub
-  
+
   '控制台输出错误：
   Private Sub InConsole(ByVal msg, ByVal hasDetail)
     If Easp.Console.Enable Then
@@ -228,7 +226,7 @@ Class EasyASP_Error
       Set SB = Nothing
     End If
   End Sub
-  
+
   '显示错误信息框
   Private Function ShowErrorMsg(ByVal msg)
     Dim SB, key, s_ref, i, lines
@@ -492,7 +490,7 @@ Class EasyASP_Error
     ShowErrorMsg = SB.ToString()
     Set SB = Nothing
   End Function
-  
+
   '显示已定义的所有错误代码及信息，返回Json格式
   Public Function Defined()
     Defined = Easp.Str.ToString(o_err)

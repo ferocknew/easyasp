@@ -4,7 +4,6 @@
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP String Object Class
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-06-16 23:53:45
 '## Description :   Format a string with chaining operations.
 '##
 '######################################################################
@@ -329,7 +328,7 @@ Class EasyASP_StringObject
     CStr = o_re.CStr_(s_source)
     Set o_re = Nothing
   End Function
-    
+
   Public Function Round(ByVal numdecimalplaces)
     Dim o_re : Set o_re = New EasyASP_StringOriginal
     Round = o_re.Round_(s_source, numdecimalplaces)

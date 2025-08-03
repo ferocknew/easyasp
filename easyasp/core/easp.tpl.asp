@@ -3,9 +3,7 @@
 '## easp.tpl.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Templates Class
-'## Version     :   v3
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-07-25 10:08:34
 '## Description :   Use Templates with EasyASP
 '##
 '######################################################################
@@ -507,7 +505,7 @@ Class EasyASP_Tpl
       f0 = Easp.IIF(Easp.Has(f),"{0"&f&"}","{0}")
       '如果此标签有替换值
       If o_tag.Exists(data) Then
-        rule = Match.Value      
+        rule = Match.Value
         '替换标签为相应的值
         If Easp.isN(o_tag.Item(data)) Then
           s = Replace(s, rule, "")

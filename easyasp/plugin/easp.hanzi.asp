@@ -5,7 +5,6 @@
 '## Feature     :   EasyAsp Chinese character processing tools
 '## Version     :   1.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-04-16 11:31:25
 '## Description :   This plugin provides Chinese characters to Pinyin,
 '##                 Chinese characters translate English , Chinese word
 '##                 segmentation , etc.

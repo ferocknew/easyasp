@@ -3,9 +3,7 @@
 '## easp.cache.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Cache Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com) & SunYu
-'## Update Date :   2014-05-01 23:54:53
 '## Description :   Save and Get Cache With EasyASP
 '##
 '######################################################################
@@ -78,8 +76,8 @@ Class EasyASP_Cache
     Next
   End Sub
   '保存所有内存缓存
-  Public Sub SaveAppAll  
-    Dim f 
+  Public Sub SaveAppAll
+    Dim f
     For Each f In Items
       Items(f).SaveApp
     Next
@@ -92,8 +90,8 @@ Class EasyASP_Cache
     Next
   End Sub
   '清除所有内存缓存
-  Public Sub RemoveAppAll  
-    Dim f 
+  Public Sub RemoveAppAll
+    Dim f
     For Each f In Items
       Items(f).RemoveApp
     Next
@@ -288,7 +286,7 @@ class Easp_Cache_Info
     next
     If s_p="" Then s_p="_"
     TransPath = SavePath & s_p & FileType
-  End Function  
+  End Function
   '缓存是否可用（未过期）
   Public Function Ready()
     Dim app : app = Easp.GetApplication(Me.Name)

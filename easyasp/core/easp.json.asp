@@ -3,9 +3,7 @@
 '## easp.json.asp
 '## ----------------------------------------------------------------------
 '## Feature     :   EasyASP Json Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-06-03 15:25:46
 '## Description :   Create a json string or Parse a json object/array.
 '##                 Based on VBJSON by Michael Glaser (vbjson@ediy.co.nz).
 '#########################################################################
@@ -27,7 +25,7 @@ Class EasyASP_Json
     b_encode = True
     b_quickMode = True
   End Sub
-  
+
   '设置和读取生成Json字符串是是否编码 Unicode 字符
   Public Property Get EncodeUnicode
     EncodeUnicode = b_encode
@@ -51,7 +49,7 @@ Class EasyASP_Json
   Public Function NewArray()
     Set NewArray = New EasyASP_Json_Array
   End Function
-  
+
   '解析Json字符串并返回 EaspJson 对象
   Public Function Parse(ByRef str)
     Dim index
@@ -433,7 +431,7 @@ Class EasyASP_Json_Object
   '设置key/value值
   '参数： @key   - 可以是本对象下的键名，也可以是本对象下的对象字符串，如：
   '               "key" 或者 "key.key1[0].key2"
-  '      @value - 要设置的键值 
+  '      @value - 要设置的键值
   Public Sub Put(ByVal key, ByRef value)
     On Error Resume Next
     '如果是字符串方式
@@ -555,7 +553,7 @@ Class EasyASP_Json_Array
       Easp.SetDictionaryKey o_dic, index, Null
     End If
   End Sub
-  
+
   '将Json Array对象输出为字符串
   Public Function ToString()
     ToString = Easp.Json.ToString(o_dic.Items)

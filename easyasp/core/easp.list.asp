@@ -3,9 +3,7 @@
 '## easp.list.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP List(Array) Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-02-03 1:18:39
 '## Description :   A super Array class in EasyASP
 '##                 Support Array and Hashmap
 '##
@@ -16,7 +14,7 @@ Class EasyASP_List
   Private a_list
   Private i_count, i_comp
   Private s_separator
-  
+
   Private Sub Class_Initialize
     Easp.Error("error-list-indexnull") = Easp.Lang("error-list-indexnull")
     Easp.Error("error-list-indexwrong") = Easp.Lang("error-list-indexwrong")
@@ -30,12 +28,12 @@ Class EasyASP_List
     s_separator = ""
     Set a_list = NewSimpleArray
   End Sub
-  
+
   Private Sub Class_Terminate
     Set o_map  = Nothing
     Set o_hash = Nothing
   End Sub
-  
+
   '建新Easp List类实例
   Public Function [New]()
     Set [New] = New EasyASP_List
@@ -59,7 +57,7 @@ Class EasyASP_List
   Public Function NewSimpleArray()
     Set NewSimpleArray = New EasyASP_Json_Array
   End Function
-  
+
   '是否忽略大小写
   Public Property Let IgnoreCase(ByVal b)
     i_comp = Easp.IIF(b, 1, 0)
@@ -67,7 +65,7 @@ Class EasyASP_List
   Public Property Get IgnoreCase
     IgnoreCase = (i_comp = 1)
   End Property
-  
+
   '设置和读取某一项值
   Public Property Let At(ByVal n, ByVal v)
     If Easp.IsN(n) Then
@@ -124,7 +122,7 @@ Class EasyASP_List
       End If
     End If
   End Property
-  
+
   '设置和读取用普通数组方式设置初始值的分隔符
   Public Property Let Separator(ByVal string)
     s_separator = string
@@ -132,7 +130,7 @@ Class EasyASP_List
   Public Property Get Separator
     Separator = s_separator
   End Property
-  
+
   '设置源数组为普通数组或取出为普通数组
   Public Property Let Data(ByVal a)
     Data__ a, 0
@@ -140,7 +138,7 @@ Class EasyASP_List
   Public Property Get Data
     Data = a_list.GetArray()
   End Property
-  
+
   '设置源数组为哈希(Hash)表或取出为普通数组
   Public Property Let Hash(ByVal a)
     Data__ a, 1
@@ -196,7 +194,7 @@ Class EasyASP_List
 			End If
     End If
   End Sub
-  
+
   '设置或读取Hash映射关系字典
   Public Property Let Maps(ByVal d)
     If TypeName(d) = "Dictionary" Then CloneDic__ o_map, d
@@ -204,17 +202,17 @@ Class EasyASP_List
   Public Property Get Maps
     Set Maps = o_map
   End Property
-  
+
   '返回数组的长度
   Public Property Get Length
     Length = Size
   End Property
-  
+
   '返回数组的最大下标
   Public Property Get [End]
     [End] = Size - 1
   End Property
-  
+
   '返回数组的有效长度（非空值）
   Public Property Get Count
     Dim i,j : j = 0
@@ -223,17 +221,17 @@ Class EasyASP_List
     Next
     Count = j
   End Property
-  
+
   '返回数组的第一个元素值
   Public Property Get First
     First = At(0)
   End Property
-  
+
   '返回数组的最后一个元素值
   Public Property Get Last
     Last = At([End])
   End Property
-  
+
   '返回数组中的最大值
   Public Property Get Max
     Dim i, v
@@ -245,7 +243,7 @@ Class EasyASP_List
     End If
     Max = v
   End Property
-  
+
   '返回数组中的最小值
   Public Property Get Min
     Dim i, v
@@ -257,7 +255,7 @@ Class EasyASP_List
     End If
     Min = v
   End Property
-  
+
   '序列化Hash表，即转化为a=1&b=2&c=3型字符串
   Public Property Get Serialize
     Dim tmp, i : tmp = ""
@@ -269,12 +267,12 @@ Class EasyASP_List
     If Len(tmp)>1 Then tmp = Mid(tmp,2)
     Serialize = tmp
   End Property
-  
+
   '检测是否包含某个下标
   Public Function HasIndex(ByVal i)
     HasIndex = Index(i) >= 0
   End Function
-  
+
   '返回Hash名称所在的下标数字
   Public Function Index(ByVal i)
     If isNumeric(i) Then
@@ -287,7 +285,7 @@ Class EasyASP_List
       End If
     End If
   End Function
-  
+
   '返回数字下标的Hash名称
   Public Function IndexHash(ByVal i)
     If isNumeric(i) Then
@@ -297,7 +295,7 @@ Class EasyASP_List
     End If
     IndexHash = Easp.IfHas(IndexHash, i)
   End Function
-  
+
   '比较函数
   '参数： @t - 比较方式： lt 小于
   Private Function Compare__(ByVal t, ByVal a, ByVal b)
@@ -325,7 +323,7 @@ Class EasyASP_List
       End Select
     End If
   End Function
-  
+
   '添加一个元素到数组开头
   Public Sub UnShift(ByVal v)
     Insert 0, v
@@ -335,7 +333,7 @@ Class EasyASP_List
     Set UnShift_ = Me.Clone
     UnShift_.UnShift v
   End Function
-  
+
   '删除数组第一个元素
   Public Sub Shift
     [Delete] 0
@@ -345,7 +343,7 @@ Class EasyASP_List
     Set Shift_ = Me.Clone
     Shift_.Shift
   End Function
-  
+
   '添加一个元素到数组结尾
   Public Sub Push(ByVal v)
     'ReDim Preserve a_list(Size)
@@ -357,7 +355,7 @@ Class EasyASP_List
     Set Push_ = Me.Clone
     Push_.Push v
   End Function
-  
+
   '删除数组最后一个元素
   Public Sub Pop
     RemoveMap__ [End]
@@ -388,7 +386,7 @@ Class EasyASP_List
     End If
     At(n) = At(i)
   End Sub
-  
+
   '在指定下标插入一个元素或一个数组
   Public Sub Insert(ByVal n, ByVal v)
     Dim i,j
@@ -432,12 +430,12 @@ Class EasyASP_List
     Set Insert_ = Me.Clone
     Insert_.Insert n, v
   End Function
-  
+
   '检测数组中是否包含某个值
   Public Function Has(ByVal v)
     Has = (indexOf__(a_list.GetArray, v) > -1)
   End Function
-  
+
   '检测某个值在数组中的下标
   Public Function IndexOf(ByVal v)
     IndexOf = indexOf__(a_list.GetArray, v)
@@ -462,7 +460,7 @@ Class EasyASP_List
       End If
     Next
   End Function
-  
+
   '删除一个或多个元素
   Public Sub [Delete](ByVal n)
     Dim tmp,a,x,y,i
@@ -566,7 +564,7 @@ Class EasyASP_List
       map(key) = hash(key)
     Next
   End Sub
-  
+
   '让数组随机排序(洗牌)
   Public Sub Rand
     Dim i, j, tmp, Ei, Ej, Ti, Tj
@@ -602,7 +600,7 @@ Class EasyASP_List
     Set Rand_ = Me.Clone
     Rand_.Rand
   End Function
-  
+
   '将数组倒序排列
   Public Sub Reverse
     Dim arr(),i,j : j = 0
@@ -645,7 +643,7 @@ Class EasyASP_List
     Set SearchNot_ = Me.Clone
     SearchNot_.SearchNot s
   End Function
-  
+
   Private Sub Search__(ByVal s, ByVal keep)
     Dim arr,i,tmp
     '搜索结果
@@ -656,7 +654,7 @@ Class EasyASP_List
       AddHash__ arr
     End If
   End Sub
-  
+
   '删除数组中的空元素
   Public Sub Compact
     Dim arr(), i, j : j = 0
@@ -681,14 +679,14 @@ Class EasyASP_List
     Set Compact_ = Me.Clone
     Compact_.Compact
   End Function
-  
+
   '清空数组
   Public Sub Clear
     a_list.Clear
     If o_map.Count>0 Then o_map.RemoveAll
     Size = 0
   End Sub
-  
+
   '数组排序
   Public Sub Sort
     Dim arr
@@ -723,8 +721,8 @@ Class EasyASP_List
         h = h - 1
       Loop
       If l <= h Then
-        x = arr(l) : arr(l) = arr(h) : arr(h) = x   
-        l = l + 1 : h = h - 1         
+        x = arr(l) : arr(l) = arr(h) : arr(h) = x
+        l = l + 1 : h = h - 1
       End If
     Loop
     If (low < h) Then arr = SortArray(arr, low, h)
@@ -742,7 +740,7 @@ Class EasyASP_List
         '取出这个下标
         tmp = IndexOfHash(arr(i))
         '添加到新的索引值（只添加一次）
-        If Not o_hash.Exists(tmp) Then 
+        If Not o_hash.Exists(tmp) Then
           o_hash.Add i, tmp
           o_hash.Add tmp, i
         End If
@@ -752,7 +750,7 @@ Class EasyASP_List
     CloneDic__ o_map, o_hash
     o_hash.RemoveAll
   End Sub
-  
+
   '按下标取出部分元素而删除数组的其它元素
   Public Sub Slice(ByVal s)
     Dim a,i,j,k,x,y,arr
@@ -817,7 +815,7 @@ Class EasyASP_List
   Public Function [Get](ByVal s)
     Set [Get] = Slice_(s)
   End Function
-  
+
   '返回将数组元素用字符连接后的字符串
   Public Function Join(ByVal s)
     Dim j
@@ -830,24 +828,24 @@ Class EasyASP_List
     Set Join_ = Me.Clone
     Join_.Join s
   End Function
-  
+
   '将数组转换成用逗号隔开的字符串
   Public Function ToString()
     ToString = Join(",")
   End Function
-  
+
   '取出为普通数组(无Hash标识的普通数组)
   Public Function ToArray
     ToArray = a_list.GetArray
   End Function
-  
+
   '复制List对象
   Public Function Clone
     Set Clone = Me.New
     Clone.Data = a_list.GetArray
     If o_map.Count>0 Then Clone.Maps = o_map
   End Function
-  
+
   '=============
   '=以下是循环处理部分
   '=============
@@ -863,7 +861,7 @@ Class EasyASP_List
     Set Map_ = Me.Clone
     Map_.Map f
   End Function
-  
+
   '按元素值进行循环调用方法
   Public Sub [Each](ByVal f)
     '意思是依次把数组中的元素作用参数调用某个方法
@@ -899,7 +897,7 @@ Class EasyASP_List
     End Select
     Value__ = tmp
   End Function
-  
+
   '返回第一个符合表达式的元素值
   Public Function Find(ByVal f)
     Dim i, k, tmp
@@ -919,7 +917,7 @@ Class EasyASP_List
     Next
     Find = Empty
   End Function
-  
+
   '删除所有不符合表达式条件的元素
   Public Sub [Select](ByVal f)
     Select__ f, 0
@@ -960,7 +958,7 @@ Class EasyASP_List
     CloneDic__ o_map, o_hash
     o_hash.RemoveAll
   End Sub
-  
+
   '删除所有符合表达式条件的元素
   Public Sub Reject(ByVal f)
     Select__ f, 1
@@ -970,7 +968,7 @@ Class EasyASP_List
     Set Reject_ = Me.Clone
     Reject_.Reject f
   End Function
-  
+
   '按元素值返回符合正则表达式的元素
   Public Sub Grep(ByVal g)
     Dim i,j,arr
@@ -996,7 +994,7 @@ Class EasyASP_List
     Set Grep_ = Me.Clone
     Grep_.Grep g
   End Function
-  
+
   '按元素值进行循环处理后并排序
   Public Sub SortBy(ByVal f)
     Map f : Sort
@@ -1006,7 +1004,7 @@ Class EasyASP_List
     Set SortBy_ = Me.Clone
     SortBy_.SortBy f
   End Function
-  
+
   '=============
   '以下是数组运算处理部分
   '=============
@@ -1028,7 +1026,7 @@ Class EasyASP_List
   Private Function IsList(ByVal o)
     IsList = Easp.Str.IsSame(TypeName(o), "EasyASP_list")
   End Function
-  
+
   '附加数组
 
   '把一个数组拼接到另一个数组最后
@@ -1070,7 +1068,7 @@ Class EasyASP_List
     Set Splice_ = Me.Clone
     Splice_.Splice o
   End Function
-  
+
   '数组合集
   '把两个数组合并并删除重复项
   Public Sub Merge(ByVal o)
@@ -1082,7 +1080,7 @@ Class EasyASP_List
     Set Merge_ = Me.Clone
     Merge_.Merge o
   End Function
-  
+
   '数组交集
   '取出在两个数组中都存在的元素
   Public Sub Inter(ByVal o)
@@ -1150,7 +1148,7 @@ Class EasyASP_List
     Set Inter_ = Me.Clone
     Inter_.Inter o
   End Function
-  
+
   '数组差集
   '取出在一个数组中存在而在另一个数组中不存在的元素
   Public Sub Diff(ByVal o)
@@ -1190,7 +1188,7 @@ Class EasyASP_List
     Set Diff_ = Me.Clone
     Diff_.Diff o
   End Function
-  
+
   '比较数组
   '比较两个数组的大小
   Public Function Eq(ByVal o)
@@ -1227,7 +1225,7 @@ Class EasyASP_List
       Eq = 0
     End If
   End Function
-  
+
   '检测一个数组是否是本数组的子集
   Public Function Son(ByVal o)
     If Not isArray(o) And Not isList(o) Then

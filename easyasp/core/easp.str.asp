@@ -3,9 +3,7 @@
 '## easp.str.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP String Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-07-07 23:50:43
 '## Description :   EasyASP String Class
 '##
 '######################################################################
@@ -26,7 +24,7 @@ Class EasyASP_String
   Public Property Let EncodeJsonUnicode(ByRef bool)
     b_encodeJson = bool
   End Property
-  
+
   '格式化字符串（首下标为0）
   Public Function Format(ByVal string, ByVal value)
     Format = FormatString(string, value, 0)
@@ -156,7 +154,7 @@ Class EasyASP_String
     End If
     FormatReplace = s
   End Function
-  
+
   '比较文本是否一致（忽略大小写）
   Public Function IsSame(ByVal string1, ByVal string2)
     If Easp.IsN(string1) And Easp.IsN(string2) Then IsSame = True : Exit Function
@@ -270,7 +268,7 @@ Class EasyASP_String
     n = Easp.IIF(isRev, InstrRev(string, separator), Instr(string, separator))
     If n > 0 Then
       arr(0) = Left(string, n-1)
-      arr(1) = Mid(string, n+Len(separator))      
+      arr(1) = Mid(string, n+Len(separator))
     Else
       If isRev Then
         arr(0) = ""
@@ -527,7 +525,7 @@ Class EasyASP_String
     End If
     HtmlFilter = string
   End Function
-  
+
   '仅格式化HTML文本中的空格和换行
   Public Function HtmlFormat(ByVal string)
     If Easp.Has(string) Then
@@ -825,7 +823,7 @@ Class EasyASP_String
       .Position = 0
       .Charset = char
       .Position = 2
-      BytesToString = .ReadText      
+      BytesToString = .ReadText
       .Close
     End With
     set oStrm = nothing
@@ -869,7 +867,7 @@ Class EasyASP_String
       Next
     End If
   End Function
-  
+
   '处理字符串中的Javascript特殊字符，中文使用\uxxxx的形式
   Public Function JsEncode(ByVal string)
     JsEncode = JsEncode_(string, True)
@@ -910,7 +908,7 @@ Class EasyASP_String
     JsEncode_ = SB.ToString
     Set SB = Nothing
   End Function
-  
+
   '输出javascript代码字符串
   Public Function JavaScript(ByVal string)
     JavaScript = FormatString("<{1} type=""text/java{1}"">{2}{3}{4}{2}</{1}>{2}", Array("sc"&"ript",vbCrLf,vbTab,string),1)
@@ -1152,9 +1150,9 @@ Class EasyASP_StringOriginal
   Public Function CStr_(ByVal string)
     CStr_ = CStr(string)
   End Function
-    
+
   Public Function Round_(ByVal string, ByVal numdecimalplaces)
     Round_ = Round(string, numdecimalplaces)
-  End Function  
+  End Function
 End Class
 %>

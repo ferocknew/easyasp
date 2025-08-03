@@ -3,9 +3,7 @@
 '## easp.upload.asp
 '## -------------------------------------------------------------------
 '## Feature   :  EasyASP Upload Files Class
-'## Version   :  MoLibUpload V1.1
 '## Author   :  Anlige(zhanghuiguoanlige@126.com, http://dev.mo.cn)
-'## Update Date :  2015-05-10 10:16:49
 '## Description :  Upload files with a post form.
 '##
 '######################################################################
@@ -44,11 +42,11 @@ Class EasyASP_MoLibUpload
   Public Property Get FileCount()
     FileCount = Fils.count
   End Property
-  
+
   Public Property Get Description()
     Description = mvarDescription
   End Property
-  
+
   Public Property Get Version()
     Version = vVersion
   End Property
@@ -67,7 +65,7 @@ Class EasyASP_MoLibUpload
   Public Property Get ErrorLang()
     ErrorLang = s_errLang
   End Property
-  
+
   Private Sub Class_Initialize()
     Dim T__
     Set Form = Server.CreateObject("Scripting.Dictionary")
@@ -95,7 +93,7 @@ Class EasyASP_MoLibUpload
     mvarClsDescription = Replace(mvarClsDescription,"\n",vbcrlf)
     ExecuteGlobal mvarClsDescription
   End Sub
-  
+
   Private Sub Class_Terminate()
     Dim f
     Form.RemoveAll()
@@ -109,7 +107,7 @@ Class EasyASP_MoLibUpload
     if StreamOpened then StreamT.close()
     Set StreamT = Nothing
   End Sub
-  
+
   Private Function ParseSizeLimit(byval SizeLimit)
     dim unit,value,multiplier,limit
     If Not isnumeric(SizeLimit) Then
@@ -127,7 +125,7 @@ Class EasyASP_MoLibUpload
       end if
     else
       limit = SizeLimit
-    End If  
+    End If
     if limit<-1 then limit=-1
     ParseSizeLimit = limit
   End Function
@@ -150,7 +148,7 @@ Class EasyASP_MoLibUpload
       End If
     End If
     If ef Then Exit function
-    vTotalSize = 0 
+    vTotalSize = 0
     StreamT.Type = 1
     StreamT.Mode = 3
     StreamT.Open
@@ -276,11 +274,11 @@ Class EasyASP_MoLibUpload
     'added by EasyASP end
     GetData =true
   End Function
-  
+
   Private Function CheckExe(ByVal ex)
     Dim notIn: notIn = True
     If vExe="*" then
-      notIn=false 
+      notIn=false
     elseIf InStr(1, vExe, "|") > 0 Then
       Dim tempExe: tempExe = Split(vExe, "|")
       Dim I: I = 0
@@ -297,7 +295,7 @@ Class EasyASP_MoLibUpload
     End If
     checkExe = notIn
   End Function
-  
+
   Private Function Bytes2Str(ByVal byt)
     If LenB(byt) = 0 Then
       Bytes2Str = ""
@@ -317,7 +315,7 @@ Class EasyASP_MoLibUpload
     Set mystream = Nothing
     Bytes2Str = bstr
   End Function
-  
+
   Private Function Getname()
     Dim y, m, d, h, mm, S, r
     Randomize
@@ -503,7 +501,7 @@ Class EasyASP_MoLibUpload
           c = Ascb(StreamT.Read(1))
           d = Ascb(StreamT.Read(1))
           if a=&HAE and b = &H42 and c = &H60 and d = &H82 then
-            ispng = true  
+            ispng = true
           end if
         end if
       end if
@@ -619,8 +617,8 @@ Class EasyASP_MoLibUpload
     End If
     StreamT.Position = File.Position
     GetBinary = StreamT.read(File.Size)
-  End Function 
-  
+  End Function
+
   Private Function GetNextFormName(byval formname)
     Dim formStart,currentIndex
     formStart = left(formname,instr(formname,vMuti)+len(vMuti)-1)
@@ -646,16 +644,16 @@ Class EasyASP_MoLibUpload
   Private Function CreateFolder(ByVal folderPath )
     Dim oFSO
     Set oFSO = Server.CreateObject("Scripting.FileSystemObject")
-    Dim sParent 
+    Dim sParent
     sParent = oFSO.GetParentFolderName(folderPath)
     If sParent = "" Then Exit Function
     If Not oFSO.FolderExists(sParent) Then CreateFolder (sParent)
     If Not oFSO.FolderExists(folderPath) Then oFSO.CreateFolder (folderPath)
     Set oFSO = Nothing
   End Function
-  
-  Private Function GetFilePath(Byref File) 
-    Dim oFSO, Fname , FNameL , i 
+
+  Private Function GetFilePath(Byref File)
+    Dim oFSO, Fname , FNameL , i
     i = 0
     Set oFSO = Server.CreateObject("Scripting.FileSystemObject")
     Fname = Server.MapPath(File.Path & File.FileName)
@@ -668,13 +666,13 @@ Class EasyASP_MoLibUpload
     Set oFSO = Nothing
     GetFilePath = Fname
   End Function
-  
+
   Private Function NewFile()
     Execute "Set NewFile = new " & mvarClsName
     NewFile.Width = 0
     NewFile.Height = 0
   End Function
-  
+
   Private Function BinVal2(bin)
     dim lngValue,i
     lngValue=0
@@ -706,7 +704,7 @@ Class EasyASP_MoLibUpload
 
   Private Function Str2Num(str, base)
     Dim ret, i
-    ret = 0 
+    ret = 0
     for i = 1 to Len(str)
       ret = ret * base + Cint(Mid(str, i, 1))
     Next

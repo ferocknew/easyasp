@@ -3,9 +3,7 @@
 '## easp.log.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Log Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2015-08-03
 '## Description :   Log file generator
 '##
 '######################################################################
@@ -16,7 +14,7 @@ Class EasyASP_Log
           s_path, s_siteFolder, s_logFolder, s_rolling, s_file, s_id, _
           i_timer, i_lastTimer, _
           dic, dic_add, dic_style
-  
+
   Private Sub Class_Initialize()
     i_timer = Easp_Timer
     b_enabled = False

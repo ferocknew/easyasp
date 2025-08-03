@@ -3,9 +3,7 @@
 '## easp.encrypt.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Encrypt Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
-'## Update Date :   2014-07-07 3:11:56
 '## Description :   Encrypt or decrypt a string in a simple way.
 '##
 '######################################################################
@@ -22,7 +20,7 @@ Class EasyASP_Encrypt
   Public Property Get Key()
     Key = s_key
   End Property
-  
+
   Public Default Function Encrypt(ByVal string)
     Encrypt = EncryptBy(string, s_key)
   End Function
@@ -30,7 +28,7 @@ Class EasyASP_Encrypt
   Public Function Decrypt(ByVal string)
     Decrypt = DecryptBy(string, s_key)
   End Function
-  
+
   Public Function EncryptBy(ByVal string, ByVal s_key)
     Dim s_enkey, i_leng, i_keyleng, i_key, i_str, i_re
     Dim SB, i, j, i_times, i_pos, b_flag, s_re
