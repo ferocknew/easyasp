@@ -3,7 +3,6 @@
 '## easp.stringbuilder.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP StringBuilder Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
 '## Update Date :   2014-05-12 0:38:21
 '## Description :   Create a string in a high-performance way

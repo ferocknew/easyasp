@@ -1,12 +1,7 @@
 ##EasyASP v3.0
 
-作者 : coldstone (coldstone[at]qq.com)
-官网 : <http://www.easyasp.cn>
-GIT : <https://git.coding.net/coldstone/easyasp.git>
-
-> git 镜像：
-> GitHub : <https://github.com/coldstone/easyasp.git>
-> osChina : <http://git.oschina.net/coldstone/easyasp>
+原作者 : coldstone (coldstone[at]qq.com)
+GIT : https://github.com/coldstone/easyasp
 
 Licenses : EasyASP 遵循 [Apache licenses v2](http://zh.wikipedia.org/zh-cn/Apache%E8%AE%B8%E5%8F%AF%E8%AF%81) 版权协议
 
@@ -48,6 +43,4 @@ EasyASP 是一个简单方便的用来快速开发ASP程序的类库。EasyASP �
 * [工具] 拥有高人气的文档社区，并有大量优秀的文档编辑提供丰富的带示例的API文档支持。
 * ……
 
-###交流与反馈
-* Bug 提交或功能建议请到 [Coding 讨论区](https://coding.net/u/coldstone/p/easyasp/topic/all) 或官网论坛 [EasyASP问题反馈](http://bbs.easyasp.cn/forum-issue-1.html) 板块。
-* EaspASP 官方交流QQ群：`26435555`， 加群验证请输入 `easyasp`，无验证信息不加。
+> 官方交流QQ群：`26435555`， 加群验证请输入 `easyasp`，无验证信息不加。

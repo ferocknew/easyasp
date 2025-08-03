@@ -3,7 +3,6 @@
 '## easp.stringobject.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP String Object Class
-'## Version     :   3.0
 '## Author      :   Coldstone(coldstone[at]qq.com)
 '## Update Date :   2014-06-16 23:53:45
 '## Description :   Format a string with chaining operations.

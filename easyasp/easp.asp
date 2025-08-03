@@ -4,7 +4,7 @@ Option Explicit
 '## easp.asp
 '## -------------------------------------------------------------------
 '## Feature     :   EasyASP Class
-'## Version     :   3.0
+'## Version     :   3.1
 '## Author      :   Coldstone(coldstone[at]qq.com)
 '## Update Date :   2015-07-09
 '## Description :   EasyASP main class
@@ -30,6 +30,7 @@ Class EasyASP
   Private i_timer, i_newId
   '构造函数
   Private Sub Class_Initialize()
+    version = 3.1
     s_basePath       = "/easyasp/"
     s_pluginPath     = s_basePath & "plugin/"
     b_debug          = False
