@@ -33,7 +33,8 @@ Class EasyASP_Log
       s_id = ""
       s_path = "/../"
       Set dic_style = Easp.Json.NewObject
-      dic_style("info") = "[{date:Dy-mm-dd hh:ii:ss}, {ip}] ({method} {url}, {run}ms) {msg}"
+      'dic_style("info") = "[{date:Dy-mm-dd hh:ii:ss}, {ip}] ({method} {url}, {run}ms) {msg}"
+	  dic_style("info") = "[{date:Dy-mm-dd hh:ii:ss}, {ip}] ({method} {url}, {run}ms) {ua} {msg}"
       dic_style("warn") = "[{date:Dy-mm-dd hh:ii:ss}, {ip}] ({method} {url}, {run}ms):\n  {ua}\n  {msg}"
       dic_style("error") = "[{date:Dy-mm-dd hh:ii:ss}] ({method} {url}, {run}ms)\n  {fn}\n  {msg}"
       s_siteFolder = Easp.Str.GetValueRev(Easp.Fso.MapPath("/"), "\")

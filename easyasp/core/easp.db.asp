@@ -56,6 +56,7 @@ Class EasyASP_Db
     SetPager "bootstrap", "{first}{prev}{list}{next}{last}", Array("listtype:ul", "listclass:pagination pagination-sm", "currentclass:active")
     SetPager "bootstrap.pager", "{prev}{next}", Array("listtype:ul", "currentclass:active", "prev:Previous", "next:Next")
     SetPager "bootstrap.pagerside", "{prev}{next}", Array("listtype:ul", "currentclass:active", "prevclass:previous", "nextclass:next", "prev:&larr; Older", "next:Newer &rarr;")
+    SetPager "layui-laypage", "{prev}{liststart}{list}{listend}{next} <span class='layui-laypage-count'>共 {recordcount} 条</span> {jump}", Array("jump:input")
   End Sub
   '析构方法
   Private Sub Class_Terminate()
@@ -937,7 +938,17 @@ Class EasyASP_Db
     s_tmp = Easp.IfHas(html, o_pager("default_html"))
     Set o_cfg = Server.CreateObject("Scripting.Dictionary")
     o_cfg.CompareMode = 1
-    '分页配置参数
+    '分页配置参数 layui-icon-left layui-icon-right
+    '<div class="layui-laypage">
+    '<a class="layui-laypage-prev layui-disabled" data-page="0"><i class="layui-icon layui-icon-left"></i></a>
+    '<span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>1</em></span>
+    '<a data-page="2">2</a><a data-page="3">3</a>
+    '<span class="layui-laypage-spr">…</span>
+    '<a class="layui-laypage-last" title="尾页" data-page="100">100</a>
+    '<a class="layui-laypage-next" data-page="2"><i class="layui-icon layui-icon-right"></i></a>
+    '<span class="layui-laypage-skip">到第<input type="text" min="1" value="1" class="layui-input">页<button type="button" class="layui-laypage-btn">确定</button></span>
+    '<span class="layui-laypage-count">共 1000 条</span><span class="layui-laypage-limits"><select lay-ignore=""><option value="10" selected="">10 条/页</option><option value="20">20 条/页</option></select></span>
+    '</div>
     o_cfg("recordcount")  = i_recordCount '总记录数
     o_cfg("pageindex")    = i_pageIndex '当前页码
     o_cfg("pagecount")    = i_pageCount '总页数
@@ -947,21 +958,21 @@ Class EasyASP_Db
     o_cfg("maxrow")       = i_maxRow '当前页最大记录号
     o_cfg("list")         = "*" '页码显示，*代表页码，例如可配置为 第*页
     o_cfg("listtype")     = "div" '分页显示容器，可以是 div 或者 ul，默认为div
-    o_cfg("listclass")    = "pager" '分页容器（div或ul）的class样式
+    o_cfg("listclass")    = "layui-box layui-laypage layui-laypage-default" '分页容器（div或ul）的class样式
     o_cfg("listlong")     = 7 '在分页链接中显示的页码数量
     o_cfg("listsidelong") = 2 '在分页链接两头显示的页码数量，为0则不显示
-    o_cfg("pageclass")    = "" '每个页码的class样式
-    o_cfg("currentclass") = "current" '当前页的class样式
-    o_cfg("disabledclass")= "disabled" '不可用的链接的class样式
+    o_cfg("pageclass")    = ""   '每个页码的class样式
+    o_cfg("currentclass") = "layui-laypage-curr" '当前页的class样式current
+    o_cfg("disabledclass")= "layui-disabled"  '不可用的链接的class样式disabled
     o_cfg("link")         = ReplaceUrl(s_pageParam, "*") '页码链接地址，其中*代表页码
-    o_cfg("first")        = "&laquo;" '首页链接文字
-    o_cfg("firstclass")   = "" '首页链接class样式
-    o_cfg("prev")         = "&#8249;" '上一页链接文字
-    o_cfg("prevclass")    = "" '上一页链接class样式
-    o_cfg("next")         = "&#8250;" '下一页链接文字
-    o_cfg("nextclass")    = "" '下一页链接class样式
-    o_cfg("last")         = "&raquo;" '末页链接文字
-    o_cfg("lastclass")    = "" '末页链接class样式
+    o_cfg("first")        = "&laquo;" '首页链接文字&laquo;
+    o_cfg("firstclass")   = "layui-laypage-first" '首页链接class样式
+    o_cfg("prev")         = "<i class='layui-icon layui-icon-left'></i>" '上一页链接文字&#8249;
+    o_cfg("prevclass")    = "layui-laypage-prev" '上一页链接class样式
+    o_cfg("next")         = "<i class='layui-icon layui-icon-right'></i>" '下一页链接文字&#8250;
+    o_cfg("nextclass")    = "layui-laypage-next" '下一页链接class样式
+    o_cfg("last")         = "&raquo;" '末页链接文字&raquo;
+    o_cfg("lastclass")    = "layui-laypage-last" '末页链接class样式
     o_cfg("more")         = "..." '被省略的页码显示为，默认是"..."
     o_cfg("jump")         = "input" '跳转框样式，默认为"input"文本框，可设置为"select"下拉菜单
     o_cfg("jumpplus")     = "" '设置input或select跳转框的标签内属性
@@ -1002,7 +1013,7 @@ Class EasyASP_Db
         If o_cfg("listtype") = "ul" Then
           s_list = s_list & " <li class=""" & o_cfg("currentclass") & AddHtmlClass(1, o_cfg("pageclass")) & """><a href=""javascript:void(0)"">" & Replace(o_cfg("list"),"*",i) & "</a></li> "
         Else
-          s_list = s_list & " <span class=""" & o_cfg("currentclass") & AddHtmlClass(1, o_cfg("pageclass")) & """>" & Replace(o_cfg("list"),"*",i) & "</span> "
+          s_list = s_list & " <span class=""" & o_cfg("currentclass") & AddHtmlClass(1, o_cfg("pageclass")) & """><em class='layui-laypage-em'></em><em>" & Replace(o_cfg("list"),"*",i) & "</em></span> "
         End If
       Else
         If o_cfg("listtype") = "ul" Then
@@ -1027,7 +1038,7 @@ Class EasyASP_Db
         If o_cfg("listtype") = "ul" Then
           i_listStart = i_listStart & " <li" & AddHtmlClass(0, o_cfg("pageclass")) & "><span>" & s_moreTmp & "</span></li> "
         Else
-          i_listStart = i_listStart & " <span" & AddHtmlClass(0, o_cfg("pageclass")) & ">" & s_moreTmp & "</span> "
+          i_listStart = i_listStart & " <span" & AddHtmlClass(0, o_cfg("pageclass")) & ">" & s_moreTmp & "</span> "   '...
         End If
       ElseIf o_cfg("listsidelong") >= i_start And i_start > 1 Then
         For i = 1 To (i_start - 1)
@@ -1043,7 +1054,8 @@ Class EasyASP_Db
         If o_cfg("listtype") = "ul" Then
           i_listEnd = " <li" & AddHtmlClass(0, o_cfg("pageclass")) & "><span>" & o_cfg("more") & "</span></li> "
         Else
-          i_listEnd = " <span" & AddHtmlClass(0, o_cfg("pageclass")) & ">" & o_cfg("more") & "</span> "
+          'i_listEnd = " <span" & AddHtmlClass(0, o_cfg("pageclass")) & ">" & o_cfg("more") & "</span> "
+          i_listEnd = " <span class=""layui-laypage-spr"">" & o_cfg("more") & "</span> "
         End If
         For i = ((o_cfg("pagecount") - o_cfg("listsidelong"))+1) To o_cfg("pagecount")
           If o_cfg("listtype") = "ul" Then
@@ -1102,11 +1114,11 @@ Class EasyASP_Db
       Case "input"
         '生成跳转文本框
         s_jumpValue = "this.value"
-        s_jump = " <input type=""text"" size=""3"" title=""" & Easp.Lang("db-pager-input-text") & """ " & Easp.IfHas(o_cfg("jumpplus"),"")
+        s_jump = " <span class=""layui-laypage-skip"">到第<input type=""text"" min=""1"" class=""layui-input"" title=""" & Easp.Lang("db-pager-input-text") & """ " & Easp.IfHas(o_cfg("jumpplus"),"")
         '回车键执行跳转
         s_jump = s_jump & " onkeydown=""javascript:if(event.charCode==13||event.keyCode==13){if(!isNaN(" & s_jumpValue & ")){"
         s_jump = s_jump & Easp.IIF(o_cfg("jumpaction")="",Easp.IIF(Lcase(Left(o_cfg("link"),11))="javascript:",Replace(Mid(o_cfg("link"),12),"*",s_jumpValue),"document.location.href='" & Replace(o_cfg("link"),"*","'+" & s_jumpValue & "+'") & "';"),Replace(o_cfg("jumpaction"),"*", s_jumpValue))
-        s_jump = s_jump & "}return false;}"" /> "
+        s_jump = s_jump & "}return false;}"" />页</span>"
       Case "select"
         '生成跳转下拉框
         s_jumpValue = "this.options[this.selectedIndex].value"
@@ -1222,7 +1234,7 @@ Class EasyASP_Db
     CheckError "insert", Err, conn, "Insert", Array(table, fieldValues)
   End Function
 
-  '用默认Connection插入记录
+  '用默认Connection插入记录  20250803
   Public Function Ins(ByVal table, ByVal fieldValues)
     On Error Resume Next
     OpenConn()
@@ -1374,11 +1386,13 @@ Class EasyASP_Db
     Delete = ExecuteSql(conn, sql, 0)
     CheckError "delete", Err, conn, "Delete/Del", sql
   End Function
+  
   '用默认Connection删除记录
   Public Function Del(ByVal table, ByVal where)
     OpenConn()
     Del = Delete(o_conn, table, where)
   End Function
+  
   '批量删除记录
   Public Function DeleteBatch(ByRef conn, ByVal table, ByVal where)
     On Error Resume Next
@@ -1393,6 +1407,7 @@ Class EasyASP_Db
     DeleteBatch = ExecuteSql(conn, sql, 0)
     CheckError "deletebatch", Err, conn, "DeleteBatch/DelBatch", sql
   End Function
+  
   '用默认Connection批量删除记录
   Public Function DelBatch(ByVal table, ByVal where)
     OpenConn()
@@ -1409,11 +1424,13 @@ Class EasyASP_Db
     Update = ExecuteSql(conn, sql, 0)
     CheckError "update", Err, conn, "Update/Upd", sql
   End Function
+  
   '用默认Connection删除记录
   Public Function Upd(ByVal table, ByVal fieldValues, ByVal where)
     OpenConn()
     Upd = Update(o_conn, table, fieldValues, where)
   End Function
+  
   '批量删除记录
   Public Function UpdateBatch(ByRef conn, ByVal table, ByVal fieldValues, ByVal where)
     On Error Resume Next
@@ -1432,6 +1449,7 @@ Class EasyASP_Db
     End If
     CheckError "updatebatch", Err, conn, "UpdateBatch/UpdBatch", sql
   End Function
+  
   '用默认Connection批量删除记录
   Public Function UpdBatch(ByVal table, ByVal fieldValues, ByVal where)
     OpenConn()
@@ -1455,6 +1473,7 @@ Class EasyASP_Db
     End Select
     FixName = string
   End Function
+
   '替换SQL语句中的{easp.newid}
   Private Function ReplaceNewId(ByVal sql)
     If InStr(1,sql, "{easp.newid}",1)>0 Then

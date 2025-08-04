@@ -5,6 +5,27 @@
 '## Feature     :   EasyASP Date & Time Class
 '## Author      :   Coldstone(coldstone[at]qq.com)
 '## Description :   Format and processing the date and time object
+
+'## Dim test_day : test_day = "2016/3/5 04:05:06"
+'## Easp.WN Easp.Date.Format(test_day, 0)                               2016/3/5 4:05:06
+'## Easp.WN Easp.Date.Format(test_day, 1)                               2016年3月5日
+'## Easp.WN Easp.Date.Format(test_day, 2)                               2016/3/5
+'## Easp.WN Easp.Date.Format(test_day, 3)                               4:05:06
+'## Easp.WN Easp.Date.Format(test_day, 4)                               04:05
+'## Easp.WN Easp.Date.Format(test_day, "y年 yy年 yyy年 yyyy年 \y年")    2016年 16年 2016年 2016年 y年
+'## Easp.WN Easp.Date.Format(test_day, "m月 mm月 mmm月 mmmm月 \m月")    3月 03月 Mar月 Marc4月 m月
+'## Easp.WN Easp.Date.Format(test_day, "d日 dd日 \d日")                 5日 05日 d日
+'## Easp.WN Easp.Date.Format(test_day, "h时 hh时 \h时")                 4时 04时 h时
+'## Easp.WN Easp.Date.Format(test_day, "i分 ii分 \i分")                 5分 05分 i分
+'## Easp.WN Easp.Date.Format(test_day, "s秒 ss秒 \s秒")                 6秒 06秒 s秒
+'## Easp.WN Easp.Date.Format(test_day, "w周 ww周 www周 \w周")           六周 Saturday周 Sat周 w周
+'## Easp.WN Easp.Date.Format(test_day, "y年mm月dd日 周w")               2016年03月05日 周六
+'## Easp.WN Easp.Date.Format(test_day, Now)                             2个月前
+'## Easp.WN Easp.Date.Format(Now, "")                                   刚刚
+'## Easp.WN Easp.Date.Format(Now-3, "")                                 3天前 10:41
+'## Easp.WN Easp.Date.Format(Now+3, "")                                 3天后 10:41
+'## Easp.WN Easp.Date.Format(test_day, "")                              2016-03-05 04:05
+'## Easp.WN Easp.Date.IsDe(test_day, "") 
 '##
 '######################################################################
 
@@ -110,6 +131,63 @@ Class EasyASP_Date
     For i = 0 To 6 : t = Replace(t, SpecialTextRe(i),SpecialText(i)) : Next
     Format = t
   End Function
+  
+  '按需取各种格式日期  
+  Public Function IsDe(ByVal d, ByVal n)
+    If Easp.IsN(d) Or Not IsDate(d) Then IsDe = "" : Exit Function
+    If Easp.IsN(n) or Not isNumeric(n) Then IsDe = "" : Exit Function
+    Select Case n
+      case 0
+        IsDe=Format(d, "yyyy-mm-dd hh:ii:ss")  'yyyy-mm-dd hh:ii:ss
+      case 1
+        IsDe=Format(d, "yyyy-mm-dd")           '年月日
+      case 2
+        IsDe=Format(d, "yyyy-mm")              '年月
+      case 3
+        IsDe=Format(d, "yyyy")                 '年
+      case 4
+        IsDe=Format(d, "mm")                   '月
+      case 5
+        IsDe=Format(d, "dd")                   '日
+      case 6
+        IsDe=Format(d, "yyyymmddhhiiss")       'yyyymmddhhiiss
+      case 7
+        IsDe=suMonth(d)                        '取所在月总天数
+      case 8
+        IsDe=CDate(Year(d)&"-"&Month(d)&"-1")  '取所在月第一天
+	    IsDe=Format(IsDe, "yyyy-mm-dd")        '年月日
+      case 9
+        IsDe=CDate(DateAdd("d",-1,DateAdd("m",1,Year(d)&"-"&Month(d)&"-1"))) '取所在月最后一天
+	    IsDe=Format(IsDe, "yyyy-mm-dd")        '年月日
+      case else
+        IsDe=Format(d, "yyyy-mm-dd")
+   End Select
+  End Function
+  '计算?个工作日后的日期
+  Public Function AddWorkDays(ByVal d, ByVal t)
+    Dim j
+    For j = 1 To t
+        Do While Weekday(d) = vbSaturday Or Weekday(d) = vbSunday
+           d = DateAdd("d", 1, d)
+        Loop
+        d = DateAdd("d", 1, d)
+    Next
+    AddWorkDays = Format(d, "yyyy-mm-dd") '年月日
+  End Function
+
+  '取所在月总天数
+  Public Function suMonth(ByVal d)
+    suMonth = d '今天
+    suMonth = DateAdd("m",1,suMonth) '月份加1
+    suMonth = Cdate(Year(suMonth) & "-" & Month(suMonth) & "-1") '下月的第一天
+    suMonth = DateAdd("d",suMonth,-1) '本月的最后一天
+    suMonth = day(suMonth) '本月的天数
+  End Function
+  
+  '取所在日期季度
+  Public Function Part(ByVal d)
+    Part = DatePart("q", Format(d, "y-mm-dd"))
+  End Function
 
   '取所在月份的第一天
   Public Function FirstDayOfMonth(ByVal d)
@@ -141,7 +219,7 @@ Class EasyASP_Date
     If Easp.IsN(dateTime) or Not IsDate(dateTime) Then dateTime = Now
     If Easp.IsN(timeZone) or Not isNumeric(timeZone) Then TimeZone = 0
     ToUnixTime = DateAdd("h", -TimeZone, dateTime)
-    ToUnixTime = DateDiff("s", "1970-1-1 0:0:0", ToUnixTime)
+    ToUnixTime = DateDiff("s", "1970-1-1 00:00:00", ToUnixTime)
   End Function
   '取中国时区时间戳
   Public Function ToUnixTimeCn(ByRef dateTime)

@@ -298,7 +298,7 @@ Class EasyASP_String
       i_sepleng = Len(s_sep)
     Else
       i_len = strlen
-      s_sep = "..."
+      s_sep = " ..."
       i_sepleng = 1
     End If
     '如果字符串不够长或者strlen为0，则返回全部字符串
@@ -462,7 +462,6 @@ Class EasyASP_String
     Easp_Test = o_regexp.Test(CStr(s))
     Set o_regexp = Nothing
   End Function
-
   '正则表达式特殊字符转义
   Public Function RegexpEncode(ByVal string)
     Dim re,i
@@ -483,22 +482,99 @@ Class EasyASP_String
     End If
     TrimChar = string
   End Function
+  
+  '将敏感词汇替换为***
+  Public Function HtmlWords(ByVal string)
+  	string = Trim(string)
+    If Easp.Has(string) Then
+       Dim arrWs, strW, j          '脏话过滤
+       arrWs = Array("艹", "痒", "骚", "逼", "屌", "蠢猪", "蠢货", "傻逼", "你妈", "你妹", "鸡巴", "煞笔", "草泥马", "白痴", "操你", "日你", "垃圾", "汉菜", "sb", "fuck")
+       For j = 0 To UBound(arrWs)  '敏感词汇列表，可以自行添加
+           strW = arrWs(j)
+           string = o_re.Re(string, strW, "***") '将敏感词汇替换为***
+       Next
+    End If
+    HtmlWords = string
+  End Function
+  
+  '匹配除了中文、数字、字母大小写和英文逗号以外的任何符号-----品类专用
+  Public Function FilterLeDel(ByVal string)
+    Dim regex, filterStr
+    Set regex = New RegExp
+        regex.Pattern = "[^,\u002C\u4E00-\u9FFF0-9a-zA-Z\s]+"
+        regex.Global = True
+        filterStr = regex.Replace(string, "")
+    Set regex = Nothing
+    filterStr = Replace(filterStr, " ", "")    '移除多余的空格
+    filterStr = Replace(filterStr, "，", ",")  '替换中文逗号为英文逗号
+    filterStr = Replace(filterStr, ",,", ",")  '移除连续的逗号
+    If Right(filterStr, 1) = "," Then          '移除尾部的逗号
+        filterStr = Left(filterStr, Len(filterStr) - 1)
+    End If
+    FilterLeDel = filterStr
+  End Function
 
+  '将HTML文本转换为HTML代码并过滤HTML代码的函数包括过滤链接、CSS和JS
+  Public Function FilterDel(ByVal string)
+    If Easp.Has(string) Then
+	  string = HtmlWords(string)
+      Dim objRegExp, Match, Matches
+      Set objRegExp = New Regexp
+      objRegExp.IgnoreCase = True
+      objRegExp.Global = True
+      objRegExp.Pattern = "<style(.+?)/style>"   '取闭合的<> 
+      Set Matches = objRegExp.Execute(string)
+          For Each Match in Matches
+              string=o_re.Re(string, Match.Value, "")
+          Next
+	  Set Matches = Nothing
+      objRegExp.Pattern = "<script(.+?)/script>" '取闭合的<> 
+      Set Matches = objRegExp.Execute(string)
+          For Each Match in Matches
+              string=o_re.Re(string, Match.Value, "")
+          Next
+	  Set Matches = Nothing
+      objRegExp.Pattern = "<.+?>"                '取闭合的<> 
+      Set Matches = objRegExp.Execute(string)
+          For Each Match in Matches
+              string=o_re.Re(string, Match.Value, "")
+          Next
+	  Set Matches = Nothing
+      Set objRegExp = Nothing
+	  string = HtmlEncode(string)
+    End If
+    FilterDel = string
+  End Function
+  
   '将HTML代码转换为文本实体
   Public Function HtmlEncode(ByVal string)
     If Easp.Has(string) Then
-      string = o_re.Re(string, Chr(38), "&#38;")
+      string = HtmlWords(string)
+      string = Trim(string)
+      With New RegExp
+          .Global = True
+          .IgnoreCase = True
+          .Pattern = "<script[^>]*>[\s\S]*?<\/script>"
+          string = .Replace(string, "")
+      End With
+      string = o_re.Re(string, Chr(38), "&#38;")   ' & → &amp;
       string = o_re.Re(string, "<", "&lt;")
       string = o_re.Re(string, ">", "&gt;")
-      string = o_re.Re(string, Chr(39), "&#39;")
-      string = o_re.Re(string, Chr(32), " ")
-      string = o_re.Re(string, "  ", "&nbsp;&nbsp;")
-      string = o_re.Re(string, Chr(34), "&quot;")
-      string = o_re.Re(string, Chr(9), "&nbsp;&nbsp;")
+      string = o_re.Re(string, Chr(39), "&#39;")    ' ' → &apos;
+      string = o_re.Re(string, Chr(34), "&quot;")   '" " → &quot;
+      string = o_re.Re(string, "  ", "&nbsp;&nbsp;")  ' 双空格替换
+      string = o_re.Re(string, Chr(9), "&nbsp;&nbsp;") ' 制表符替换
       string = o_re.Re(string, vbCrLf, "<br />")
+      With New RegExp
+          .Global = True
+          .MultiLine = True
+          .Pattern = "(?:\s*(?:<br\s*/?>|\r\n|\n|\r)\s*)+$"
+          string = .Replace(string, "")
+      End With
     End If
     HtmlEncode = string
   End Function
+  
   '将HTML文本转换为HTML代码
   Public Function HtmlDecode(ByVal string)
     If Easp.Has(string) Then
@@ -514,6 +590,42 @@ Class EasyASP_String
       string = o_re.Re(string, "&#38;", Chr(38))
     End If
     HtmlDecode = string
+  End Function
+  
+  '将HTML文本转换为HTML代码-----品类显示专用
+  Public Function PHtmlDecode(ByVal string)
+    If Easp.Has(string) Then
+      string = Replace(string, "<br\s*/?\s*>", "<br />")
+      string = o_re.Re(string, "&nbsp;&nbsp;&nbsp;&nbsp;", Chr(9))
+      string = o_re.Re(string, "&quot;", Chr(34))
+      string = o_re.Re(string, "&nbsp;", Chr(32))
+      string = o_re.Re(string, "&#39;", Chr(39))
+      string = o_re.Re(string, "&apos;", Chr(39))
+      string = o_re.Re(string, "&gt;", ">")
+      string = o_re.Re(string, "&lt;", "<")
+      string = o_re.Re(string, "&amp;", Chr(38))
+      string = o_re.Re(string, "&#38;", Chr(38))
+    End If
+    PHtmlDecode = string
+  End Function
+  
+  '将HTML文本转换为HTML代码-----处罚显示专用
+  Public Function OHtmlDecode(ByVal string)
+    If Easp.Has(string) Then
+      string = Replace(string, "<br\s*/?\s*>", "")
+      string = o_re.Re(string, "&nbsp;&nbsp;&nbsp;&nbsp;", Chr(9))
+      string = o_re.Re(string, "&lt;p&gt;", "")   '<p>
+      string = o_re.Re(string, "&lt;/p&gt;", "")  '</p>
+      string = o_re.Re(string, "&quot;", Chr(34))
+      string = o_re.Re(string, "&nbsp;", Chr(32))
+      string = o_re.Re(string, "&#39;", Chr(39))
+      string = o_re.Re(string, "&apos;", Chr(39))
+      string = o_re.Re(string, "&gt;", ">")
+      string = o_re.Re(string, "&lt;", "<")
+      string = o_re.Re(string, "&amp;", Chr(38))
+      string = o_re.Re(string, "&#38;", Chr(38))
+    End If
+    OHtmlDecode = string
   End Function
 
   '过滤HTML标签
@@ -877,8 +989,11 @@ Class EasyASP_String
   Public Function JsEncode_(ByVal string, ByVal cn)
     If Easp.isN(string) Then JsEncode_ = "" : Exit Function
     Dim arr1, arr2, i, j, c, p, SB
-    arr1 = Array(&h27,&h22,&h5C,&h2F,&h08,&h0C,&h0A,&h0D,&h09)
-    arr2 = Array(&h27,&h22,&h5C,&h2F,&h62,&h66,&h6E,&h72,&h74)
+    'arr1 = Array(&h27,&h22,&h5C,&h2F,&h08,&h0C,&h0A,&h0D,&h09)
+    'arr2 = Array(&h27,&h22,&h5C,&h2F,&h62,&h66,&h6E,&h72,&h74)
+    '(修改)去掉单引号(&h27)，保留 JSON 规范允许的字符,单引号转义导致JSON错误 20250802
+    arr1 = Array(&h22,&h5C,&h2F,&h08,&h0C,&h0A,&h0D,&h09)
+    arr2 = Array(&h22,&h5C,&h2F,&h62,&h66,&h6E,&h72,&h74)
     Set SB = StringBuilder()
     'Easp.Console "::jsencode:" & string
     For i = 1 To Len(string)
@@ -913,19 +1028,112 @@ Class EasyASP_String
   Public Function JavaScript(ByVal string)
     JavaScript = FormatString("<{1} type=""text/java{1}"">{2}{3}{4}{2}</{1}>{2}", Array("sc"&"ript",vbCrLf,vbTab,string),1)
   End Function
-  '输出javascript的alert警告框消息
-  Public Sub JsAlert(ByVal string)
-    Easp.PrintEnd JavaScript(FormatString("alert('{1}');history.go(-1);",JsEncode(string),1))
-  End Sub
-  '输出javascript的alert警告框消息并跳转到其他页面
-  Public Sub JsAlertUrl(ByVal string, ByVal url)
-    Easp.PrintEnd JavaScript(FormatString("alert('{1}');location.href='{2}';",Array(JsEncode(string),url),1))
-  End Sub
+
   '输出javascript的选择消息框并根据选择跳转到不同的页面
   Public Sub JsConfirmUrl(ByVal string, ByVal yesUrl, ByVal cancelUrl)
     Easp.PrintEnd JavaScript(FormatString("location.href=confirm('{1}')?'{2}':'{3}';",Array(JsEncode(string),yesUrl,cancelUrl),1))
   End Sub
 
+  '## -----------------------------------2023.01.01-----------//绿勾1红X2黄问3灰锁4红脸5绿脸6黄感叹7
+  '登陆失效警告框消息
+  Public Sub ChkLoginAlert(ByVal string)
+    Easp.PrintEnd JavaScript(FormatString("parent.layer.alert('{1}',{icon:2},function(){parent.layer.closeAll();top.location.href='/Exit.Asp?action=Logout';});",JsEncode(string),1))
+  End Sub
+
+  '输出javascript的alert警告框消息
+  Public Sub JsAlert(ByVal string)
+    Easp.PrintEnd JavaScript(FormatString("layer.alert('{1}',{icon:2},function(){layer.closeAll();history.go(-1);});",JsEncode(string),1))
+  End Sub
+
+  '输出javascript的alert警告框消息并跳转到其他页面
+  Public Sub JsAlertUrl(ByVal string, ByVal url)
+    Easp.PrintEnd JavaScript(FormatString("layer.alert('{1}',{icon:2},function(){layer.closeAll();location.href='{2}';});",Array(JsEncode(string),url),1))
+  End Sub
+
+  '输出javascript的alert成功或失败框消息并跳转到其他页面
+  Public Sub TopAlertUrl(ByVal u, ByVal t, ByVal url)
+    If u-0=1 Then
+       Easp.PrintEnd JavaScript(FormatString("layer.alert('{1}',{icon:6},function(){layer.closeAll();location.href='{2}';});",Array(JsEncode(t),url),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("layer.alert('{1}',{icon:2},function(){layer.closeAll();location.href='{2}';});",Array(JsEncode(t),url),1))
+	End If
+  End Sub
+
+  '链接进入错误提示
+  Public Sub Alert(ByVal s)
+    Easp.PrintEnd JavaScript(FormatString("parent.layer.alert('{1}',{icon:2},function(){parent.layer.closeAll();NewTab('del');});",JsEncode(s),1))
+  End Sub
+
+  '提交后错误提示
+  Public Sub AlertLink(ByVal s)
+    Easp.PrintEnd JavaScript(FormatString("parent.layer.alert('{1}',{icon:2},function(){parent.layer.closeAll();window.location.replace(document.referrer);});",JsEncode(s),1))
+  End Sub
+
+  '提交后转到URL或提示错误
+  Public Sub AlertUrl(ByVal u, ByVal t, ByVal url)
+    If u-0=1 Then
+       Easp.PrintEnd JavaScript(FormatString("NewTab('dopen','{1}','{2}');",Array(JsEncode(t),url),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("window.location.replace(document.referrer);layer.msg('操作失败',{icon:2});",JsEncode(t),1))
+	End If
+  End Sub
+
+ '提交后成功直接关闭并刷新
+  Public Sub CloseDel(ByVal u)
+	If u-0=1 Then
+	   Easp.PrintEnd JavaScript(FormatString("NewTab('del',1);",JsEncode(u),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("NewTab('del');window.location.replace(document.referrer);layer.msg('操作失败',{icon:2});",JsEncode(u),1))
+    End If
+  End Sub
+
+ '弹出窗口提交成功后关闭并转向URL
+  Public Sub CloseUrl(ByVal u, ByVal t, ByVal url)
+    If u-0=1 Then
+       Easp.PrintEnd JavaScript(FormatString("NewTab('close');NewTab('open','{1}','{2}');",Array(JsEncode(t),url),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("window.location.replace(document.referrer);layer.msg('操作失败',{icon:2});",JsEncode(u),1))
+	End If
+  End Sub
+
+ '弹出窗口提交成功后关闭并刷新当前TAB
+  Public Sub CloseRel(ByVal u)
+    If u-0=1 Then
+       Easp.PrintEnd JavaScript(FormatString("NewTab('close');NewTab('rel');",Array(JsEncode(u)),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("window.location.replace(document.referrer);layer.msg('操作失败',{icon:2});",JsEncode(u),1))
+	End If
+  End Sub
+
+ '弹出窗口提交后成功关闭并刷新整体
+  Public Sub CloseTop(ByVal u)
+    If u-0=1 Then
+	   Easp.PrintEnd JavaScript(FormatString("NewTab('close');parent.location.reload();",JsEncode(u),1))
+	Else
+       Easp.PrintEnd JavaScript(FormatString("window.location.replace(document.referrer);layer.msg('操作失败',{icon:2});",JsEncode(u),1))
+	End If
+  End Sub
+
+  '弹出确认框并根据选择转URL
+  Public Sub ConfirmUrl(ByVal s, ByVal t, ByVal url)
+    Easp.PrintEnd JavaScript(FormatString("parent.layer.confirm('{1}',{icon:3,btn:['确认','取消'],btnAlign:'l'},function(){NewTab('open','{2}','{3}'););",Array(JsEncode(s),JsEncode(t),url),1))
+  End Sub
+
+  '获取所有类型的上传文件地址 Easp.Str.DrawFile(文章)
+  Public Function DrawFile(ByVal string)
+    Dim reFile,regEx,Matches,Match
+    Set regEx = New RegExp   '建立正则表达式
+    regEx.Pattern = "(<img|<video|<audio|<a)(.[^<>]*)(src=|href=)('|"&CHR(34)&"| )?(.[^'|\s|"&CHR(34)&"]*)(\.)(jpg|jpeg|png|mp4|mov|m4a|mp3|pdf)('|"&CHR(34)&"|\s|>)(.[^>]*)(>)" '设置模式。
+    regEx.IgnoreCase = True  '设置是否区分字符大小写
+    regEx.Global = True      '设置全局可用性 
+    Set Matches = regEx.Execute(string)  '执行搜索
+    For Each Match in Matches            '遍历匹配集合 
+        reFile = reFile&Match.SubMatches(4)&"."&Match.SubMatches(6)&","  '图片的路径叠加，并在每一个后面加个,符号
+    Next
+	DrawFile = reFile
+  End Function
+
+  '## --------------------------------------------------------2023.01.01-----------
   '取指定长度的随机字符串
   Public Function RandomStr(ByVal string)
     Dim a, p, l, t, reg, m, mi, ma
@@ -990,6 +1198,7 @@ Class EasyASP_String
   End Function
   '数字显示指定小数位数，在小于1时显示小数点前面的零
   Public Function ToNumber(ByVal number, ByVal decimalType)
+  	If Easp.IsN(number) Then ToNumber=Null : Exit Function
     Dim v, d
     If decimalType < 0 Then
     '如果decimalType为-N，则保留N位小数，但小数位数不足的不补0
@@ -1006,12 +1215,36 @@ Class EasyASP_String
     v = Easp.IfHas(v, 0)
     ToNumber = v
   End Function
+
+  '数字显示指定小数位数，在小于1时显示小数点前面的零 20250802
+  Public Function ToAccNumber(ByVal number, ByVal decimalType)
+  	If Easp.IsN(number) Then ToAccNumber=Null : Exit Function
+    Dim v, d
+    If decimalType < 0 Then
+    '如果decimalType为-N，则保留N位小数，但小数位数不足的不补0
+      decimalType = 0 - decimalType
+      d = True
+    ElseIf decimalType = 0 Then
+    '如果decimalType为0，则保留所有小数位数
+      decimalType = Len(GetValue(CStr(number), "."))
+      d = True
+    End If
+    '如果decimalType为N，则保留N位小数，小数位数不足的补0
+    v = FormatNumber(number, decimalType, -1, 0, -1)
+    If d And decimalType > 0 Then v = Replace(v, "\.?0+$", "")
+    v = Easp.IfHas(v, 0)
+    ToAccNumber = v
+  End Function
+
   '数字显示为货币格式
   Public Function ToPrice(ByVal number)
+    If Easp.IsN(number) Then number=0
     ToPrice = FormatCurrency(number, 2, -1, 0, -1)
   End Function
+
   '数值显示为百分比格式
   Public Function ToPercent(ByVal number)
+    If Easp.IsN(number) Then number=0
     ToPercent = FormatPercent(number, 2, -1)
   End Function
 

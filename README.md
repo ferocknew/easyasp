@@ -1,4 +1,4 @@
-##EasyASP v3.0
+## EasyASP v3.0
 
 原作者 : coldstone (coldstone[at]qq.com)
 GIT : https://github.com/coldstone/easyasp

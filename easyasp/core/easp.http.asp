@@ -286,7 +286,7 @@ Class EasyASP_Http
       End If
       Exit Function
     End If
-    posB = instr(PosA+Len(tagStart),s,tagEnd,1)
+    posB = instr(PosA+Len(tagStart),s,tagEnd,1) 
     If posB=0 Then
       CutString = ""
       If Easp.Debug Then
@@ -330,7 +330,8 @@ Class EasyASP_Http
     b = GetImg(s, True)
     If Easp.Has(a) Then
       For i = 0 To Ubound(a)
-        If Easp.Has(a(i)) Then
+       If Easp.Has(a(i)) Then
+        If Instr(a(i),"http://") > 0 or Instr(a(i),"https://") > 0 Then
           If SaveRandom Then
             'img = Easp.Date.Format(Now,"ymmddhhiiss"&Easp.RandStr("5:0123456789")) & Mid(a(i),InstrRev(a(i),"."))
             If Instr(a(i),".")>0 Then
@@ -352,8 +353,12 @@ Class EasyASP_Http
             src = Easp.Str.ReplacePart(b(i), "<img[^>]*?\s+src\s*=\s*((?:"")([^""]+)(?:"")|(?:')([^']+)(?:')|([^\s>]+))[^>]*>", "$1", """" & p & img & """")
             s = Replace(s, b(i), src)
           End If
+        Else
+          src = Easp.Str.ReplacePart(b(i), "<img[^>]*?\s+src\s*=\s*((?:"")([^""]+)(?:"")|(?:')([^']+)(?:')|([^\s>]+))[^>]*>", "$1", """" & a(i) & """")
+          s = Replace(s, b(i), src)
         End If
-      Next
+      End If
+     Next
     End If
     SaveStringImgTo = s
   End Function

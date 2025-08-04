@@ -288,6 +288,7 @@ Class EasyASP_Xml
     Set p = Nothing
   End Function
 End Class
+
 '节点操作
 Class EasyASP_Xml_Node
   Private o_node
@@ -447,7 +448,6 @@ Class EasyASP_Xml_Node
   End Property
 
   '=======Xml元素属性（返回新节点元素）======
-
   '获取根元素
   Public Function Root
     If IsNode Then

@@ -131,39 +131,60 @@ Class EasyASP_Fso
     tmpStr = Replace(tmpStr, vbCr & vbCrLf, vbCrLf)
     Read = tmpStr
   End Function
-  '将二进制数据保存为文件
-  Public Function SaveAs(ByVal filePath, ByVal fileContent)
+ '将二进制数据保存为文件
+ 'EasyASP_Fso类中添加以下SaveAs方法（对saveas扩展（可存字符串，生成不带bom文档）等）
+ '参数v_content:若为二进制流文档编码不变；若为字符串，根据当前类中charset的设置生成相应的编码文档
+ '不管v_content为字符串还是二进制流若生成为utf-8编码文档，其不带bom。
+  Public Function SaveAs(ByVal filePath, ByVal v_content)
     On Error Resume Next
-    Dim p, s_char, o_strm, o_utf8
-    p = absPath(filePath)
-    SaveAs = MD(Left(p,InstrRev(p,"\")-1))
-    If SaveAs Then
-      Set o_strm = Server.CreateObject("ADODB.Stream")
-      With o_strm
-        .Type = 1
-        .Open
-        .Write fileContent
-        If .Size > 2 Then
-          .Position = 0
-          If  AscB(.Read(1)) = 239 And AscB(.Read(1)) = 187 And AscB(.Read(1)) = 191 Then
-            Set o_utf8 = Server.CreateObject("ADODB.Stream")
-            o_utf8.Type = 1
-            o_utf8.Open
-            .Position = 3
-            .Copyto o_utf8
-            o_utf8.SaveToFile p, Easp.IIF(b_overwrite, 2, 1)
-            o_utf8.Close
-            Set o_utf8 = Nothing
-          Else
-            .SaveToFile p, Easp.IIF(b_overwrite, 2, 1)
-          End If
-        Else
-          .SaveToFile p, Easp.IIF(b_overwrite, 2, 1)
-        End If
-        .Close
-      End With
-      Set o_strm = Nothing
-    End If
+     Dim f,p,o_strm
+     p = absPath(filePath)
+     SaveAs = MD(Left(p,InstrRev(p,"\")-1))
+	 If SaveAs Then 
+       With  Server.CreateObject("ADODB.Stream")
+		 If typename(v_content) = "String"  Then 
+			.Charset = s_charset
+			.Open
+			.WriteText v_content
+			.position=0
+			.type = 1
+			If s_charset = "UTF-8" Then 					 
+			  Set o_strm = Server.CreateObject("ADODB.Stream")
+			  o_strm.type=1
+			  o_strm.open
+			  .position = 3
+			  .copyto o_Strm
+			  o_strm.SaveToFile p,Easp.IIF(b_overwrite,2,1)
+			  o_strm.close
+			  Set o_strm = Nothing 
+			Else 
+			  .SaveToFile p,Easp.IIF(b_overwrite,2,1)
+			End If 
+		 ElseIf typename(v_content) = "Byte()" Then 
+		  .Type = 1
+		  .Open
+		  .Write v_content
+		    If .size>2 Then 
+			  .position=0
+			  If  AscB(.Read(1)) = 239 And AscB(.Read(1)) = 187 And AscB(.Read(1)) = 191  Then 
+				  Set o_strm = Server.CreateObject("ADODB.Stream")
+				  o_strm.type=1
+				  o_strm.open
+				  .position = 3
+				  .copyto o_Strm
+				  o_strm.SaveToFile p,Easp.IIF(b_overwrite,2,1)
+				  o_strm.close
+				  Set o_strm = Nothing 
+			  Else 
+				 .SaveToFile p,Easp.IIF(b_overwrite,2,1)
+			  End If    
+		   Else
+				 .SaveToFile p,Easp.IIF(b_overwrite,2,1)
+		   End If				 
+		End If 
+	    .Close
+	  End With
+    End If 
     If Err.Number<>0 Then
       SaveAs = False
       If Easp.Debug Then

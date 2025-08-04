@@ -72,7 +72,7 @@ Class EasyASP_MoLibUpload
     Set FormArray = Server.CreateObject("Scripting.Dictionary") 'added by EasyASP
     Set Fils = Server.CreateObject("Scripting.Dictionary")
     Set StreamT = Server.CreateObject("Adodb.stream")
-    s_errLang = "en"
+    s_errLang = "zh"
     vVersion = "MoLibUpload V1.1"
     vMaxSize = -1
     vSingleSize = -1
@@ -129,6 +129,7 @@ Class EasyASP_MoLibUpload
     if limit<-1 then limit=-1
     ParseSizeLimit = limit
   End Function
+
   '开始上传动作
   Public Function GetData()
     Dim oarr 'added by EasyASP
@@ -148,7 +149,7 @@ Class EasyASP_MoLibUpload
       End If
     End If
     If ef Then Exit function
-    vTotalSize = 0
+    vTotalSize = 0 
     StreamT.Type = 1
     StreamT.Mode = 3
     StreamT.Open
@@ -198,6 +199,12 @@ Class EasyASP_MoLibUpload
           else
             fileExe = ""
           End If
+          If fileExe="" Then  'woeoio 过滤无后缀名的上传
+            mvarDescription = Easp.Lang("error-uplaod-filetype-" & s_errLang) & "(.)"
+            vErrExe = fileExe
+            tempdata = empty
+            Exit function
+          End If              'woeoio 过滤无后缀名的上传         
           If vExe <> "" Then
             If checkExe(fileExe) = True Then
               mvarDescription = Easp.Lang("error-uplaod-filetype-" & s_errLang) & "(." & ucase(fileExe) & ")"
@@ -295,7 +302,7 @@ Class EasyASP_MoLibUpload
     End If
     checkExe = notIn
   End Function
-
+  
   Private Function Bytes2Str(ByVal byt)
     If LenB(byt) = 0 Then
       Bytes2Str = ""
@@ -562,10 +569,23 @@ Class EasyASP_MoLibUpload
     On Error Resume Next
     Err.clear
     Dim IsP,Path
+	'--------日期文件夹
+	dim mm,dd,ymd
+	mm = month(now)
+	If mm < 10 Then
+		mm = "0" & mm
+	End If
+	dd = day(now)
+	If dd < 10 Then
+		dd = "0" & dd
+	End If
+	ymd = year(now) & mm & dd
+   '-----------------------
     Path = mvarSavePath
     IsP = (InStr(mvarSavePath, ":") = 2)
     If Not IsP Then Path = Server.MapPath(mvarSavePath)
     Path = Replace(Path, "/", "\")
+	'Path = Path & "\" & ymd
     If Mid(Path, Len(Path) - 1) <> "\" Then Path = Path + "\"
     CreateFolder Path
     File.Path= Replace(Replace(Path,Server.MapPath("/"),""),"\","/")
@@ -581,6 +601,9 @@ Class EasyASP_MoLibUpload
     If Not OverWrite Then
       Path = GetFilePath(File)
     End If
+    '-----------------woeoio此处过滤掉.asp文件，否则前端任意跳过限制，直接往上传接口存asp文件，会导致服务器直接被人拿下
+	Path=Replace(Path,".asp",".noasp")        
+    '------------------
     If Err.Number<>0 Then
       File.Succeed = false
       File.Exception=Err.Description
