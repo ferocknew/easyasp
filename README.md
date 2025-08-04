@@ -53,4 +53,3 @@ EasyASP 是一个简单方便的用来快速开发ASP程序的类库。EasyASP �
 - 如果 64bit 系统，IIS 应用池应启用 32bit 模式
 - office 2010 access 已经没有创建 mdb 的入口了，但是 mdb 依然是兼容性最好的 acces 数据库格式（而且，必须只安装了 32bit 的office（64bit 不要想了），accdb 需要额外安装 600m 的 RUNTIME：https://www.microsoft.com/zh-cn/download/details.aspx?id=39667）
 - 最简单的办法就是，下载一个空的 mdb 文件。
-- 
