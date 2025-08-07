@@ -1524,95 +1524,106 @@ Class EasyASP_Db
     ReplaceStasicParameter = sql
   End Function
 
-    '转换sql参数类型为数值
+  '转换sql参数类型为数值
   Private Function GetParameterType(ByVal paramType)
     Dim n
     ' 添加输入验证
     If IsEmpty(paramType) Or IsNull(paramType) Then
-      n = 200  ' 默认返回 adVarChar
+        ' 默认返回 adVarChar
+        n = 200
     ElseIf IsNumeric(paramType) Then
-      n = paramType
+        n = CLng(paramType)
+        If n < 0 Or n > 205 Then
+           ' 超出范围使用默认值
+           n = 200
+        End If
     Else
-      ' 去除首尾空格
-      paramType = Trim(paramType)
-      Select Case LCase(paramType)
+        ' 去除首尾空格并转换为小写
+        paramType = Trim(LCase(CStr(paramType)))
+        Select Case paramType
         'from the ASP book
-        Case "empty"              n = 0
-        Case "smallint"           n = 2
-        Case "integer"            n = 3
-        Case "single"             n = 4
-        Case "double"             n = 5
-        Case "currency"           n = 6
-        Case "date"               n = 7
-        Case "bstr"               n = 8
-        Case "idispatch"          n = 9
-        Case "error"              n = 10
-        Case "boolean"            n = 11
-        Case "variant"            n = 12
-        Case "iunknown"           n = 13
-        Case "decimal"            n = 14
-        Case "tinyint"            n = 16
-        Case "unsignedtinyint"    n = 17
-        Case "unsignedsmallint"   n = 18
-        Case "unsignedint"        n = 19
-        Case "bigint"             n = 20
-        Case "unsignedbigint"     n = 21
-        Case "guid"               n = 72
-        Case "binary"             n = 128
-        Case "char"               n = 129
-        Case "wchar"              n = 130
-        Case "numeric"            n = 131  ' 修正为 adNumeric
-        Case "userdefined"        n = 132
-        Case "dbdate"             n = 133
-        Case "dbtime"             n = 134
-        Case "dbtimestamp"        n = 135
-        Case "varchar"            n = 200
-        Case "longchar"           n = 201
-        Case "longvarchar"        n = 201
-        Case "memo"               n = 201
-        Case "varwchar"           n = 202
-        Case "longvarwchar"       n = 203
-        Case "string"             n = 201
-        Case "varbinary"          n = 204
-        Case "longvarbinary"      n = 204
-        Case "longbinary"         n = 205
+            ' ADO 基础数据类型
+            Case "empty"              n = 0    ' adEmpty
+            Case "smallint"           n = 2    ' adSmallInt
+            Case "integer", "int"     n = 3    ' adInteger
+            Case "single"             n = 4    ' adSingle
+            Case "double", "float"    n = 5    ' adDouble
+            Case "currency"           n = 6    ' adCurrency
+            Case "date"               n = 7    ' adDate
+            Case "bstr"               n = 8    ' adBSTR
+            Case "idispatch"          n = 9    ' adIDispatch
+            Case "error"              n = 10   ' adError
+            Case "boolean"            n = 11
+            Case "variant"            n = 12   ' adVariant
+            Case "iunknown"           n = 13   ' adIUnknown
+            Case "decimal"            n = 14   ' adDecimal
+            Case "tinyint"            n = 16   ' adTinyInt
+            Case "unsignedtinyint"    n = 17   ' adUnsignedTinyInt
+            Case "unsignedsmallint"   n = 18   ' adUnsignedSmallInt
+            Case "unsignedint"        n = 19   ' adUnsignedInt
+            Case "bigint"             n = 20   ' adBigInt
+            Case "unsignedbigint"     n = 21   ' adUnsignedBigInt
+            Case "guid"               n = 72   ' adGUID
+            Case "binary"             n = 128  ' adBinary
+            Case "char"               n = 129  ' adChar
+            Case "wchar"              n = 130  ' adWChar
+            Case "numeric"            n = 131  ' 修正为 adNumeric
+            Case "userdefined"        n = 132  ' adUserDefined
+            Case "dbdate"             n = 133  ' adDBDate
+            Case "dbtime"             n = 134  ' adDBTime
+            Case "dbtimestamp"        n = 135  ' adDBTimeStamp
+            ' 字符串和文本类型
+            Case "varchar"            n = 200  ' adVarChar
+            Case "longchar"           n = 201  ' adLongVarChar
+            Case "longvarchar"        n = 201  ' adLongVarChar
+            Case "memo", "text"       n = 201  ' adLongVarChar
+            Case "varwchar"           n = 202  ' adVarWChar
+            Case "longvarwchar"       n = 203  ' adLongVarWChar
+            Case "string"             n = 201  ' adLongVarChar
 
-        'SQL Server
-        Case "bit"                n = 11
-        Case "money"              n = 6
-        Case "int"                n = 3
-        Case "smallmoney"         n = 6
-        Case "float"              n = 5
-        Case "nchar"              n = 200
-        Case "real"               n = 4   ' 修正为 adSingle
-        Case "text"               n = 200
-        Case "time"               n = 134
-        Case "timestamp"          n = 135
-        Case "datetime"           n = 135
-        Case "smalldatetime"      n = 135
-        Case "datetime2"          n = 135
-        Case "sysname"            n = 129
-        Case "uniqueidentifier"   n = 72  ' 修正为 adGUID
-        Case "ntext"              n = 200
-        Case "nvarchar"           n = 200
-        Case "nvarchar2"          n = 200
-        Case "image"              n = 204
-        Case "sql_variant"        n = 12
+            ' 二进制类型
+            Case "varbinary"          n = 204  ' adVarBinary
+            Case "longvarbinary"      n = 204  ' adVarBinary
+            Case "longbinary"         n = 205  ' adLongVarBinary
+            Case "image"              n = 205  ' adLongVarBinary
+            Case "blob"               n = 205  ' adLongVarBinary
 
-        'MySQL
-        Case "year"               n = 3   ' 修正为 adInteger
-        Case "tinytext"           n = 200
-        Case "mediumtext"         n = 200
-        Case "longtext"           n = 201
-        Case "mediumint"          n = 3
-        Case "enum"               n = 132
-        Case "set"                n = 132
-        'others
-        Case "byte"               n = 16
-        Case "long"               n = 3
-        Case "counter"            n = 131
-        Case Else                 n = 200
-      End Select
+            ' SQL Server 特定类型
+            Case "bit"                n = 11
+            Case "money"              n = 6    ' adCurrency
+            Case "smallmoney"         n = 6    ' adCurrency
+            Case "nchar"              n = 130  ' adWChar
+            Case "real"               n = 4    ' 修正为 adSingle
+            Case "time"               n = 134  ' adDBTime
+            Case "timestamp"          n = 135  ' adDBTimeStamp
+            Case "datetime"           n = 135  ' adDBTimeStamp
+            Case "smalldatetime"      n = 135  ' adDBTimeStamp
+            Case "datetime2"          n = 135  ' adDBTimeStamp
+            Case "sysname"            n = 129  ' adChar
+            Case "uniqueidentifier"   n = 72   ' adGUID
+            Case "ntext"              n = 200
+            Case "nvarchar"           n = 200
+            Case "nvarchar2"          n = 200
+            Case "image"              n = 204
+            Case "sql_variant"        n = 12
+
+            ' MySQL 特定类型
+            Case "year"               n = 3    ' 修正为 adInteger
+            Case "tinytext"           n = 201  ' adLongVarChar
+            Case "mediumtext"         n = 201  ' adLongVarChar
+            Case "longtext"           n = 201  ' adLongVarChar
+            Case "mediumint"          n = 3    ' adInteger
+            Case "enum"               n = 132  ' adUserDefined
+            Case "set"                n = 132  ' adUserDefined
+            ' 其他/通用类型
+            Case "byte"               n = 16   ' adTinyInt
+            Case "long"               n = 3    ' adInteger
+            Case "counter"            n = 131  ' adNumeric
+            Case "bool"               n = 11   ' adBoolean
+            Case "short"              n = 2    ' adSmallInt
+            ' 默认返回字符串类型
+            Case Else                 n = 200  ' adVarChar
+        End Select
     End If
     GetParameterType = n
   End Function
